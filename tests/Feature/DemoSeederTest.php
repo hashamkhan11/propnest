@@ -75,5 +75,28 @@ class DemoSeederTest extends TestCase
         // Both demo accounts have something to look at.
         $this->assertGreaterThan(0, Inquiry::whereRelation('buyer', 'email', 'buyer@propnest.test')->count());
         $this->assertGreaterThan(0, User::where('email', 'buyer@propnest.test')->first()->favorites()->count());
+
+        // Every page renders with realistic data (and no lazy loading in strict mode).
+        $listing = $published->first();
+        $pages = [
+            'admin@propnest.test' => ['admin.dashboard', 'admin.moderation.index', 'admin.agents.index', 'admin.users.index',
+                'admin.payments.index', 'admin.refund-requests.index', 'admin.settings.edit', 'admin.categories.index',
+                'admin.regions.index', 'admin.featured-tiers.index', 'admin.subscription-plans.index', 'admin.reports.index',
+                'admin.properties.index', 'admin.analytics', 'admin.contact-messages.index', 'admin.subscribers.index', 'admin.create-admin'],
+            'agent@propnest.test' => ['agent.dashboard', 'agent.properties.index', 'agent.properties.create',
+                'agent.inquiries.index', 'agent.subscriptions.index'],
+            'buyer@propnest.test' => ['buyer.dashboard', 'favorites.index', 'saved-searches.index', 'compare.index'],
+        ];
+
+        foreach ($pages as $email => $routes) {
+            $this->actingAs(User::where('email', $email)->first());
+
+            foreach ([...$routes, 'home', 'properties.index', 'agents.index', 'profile'] as $route) {
+                $this->get(route($route))->assertOk();
+            }
+
+            $this->get(route('properties.show', $listing))->assertOk();
+            $this->get(route('agents.show', $listing->agent))->assertOk();
+        }
     }
 }
