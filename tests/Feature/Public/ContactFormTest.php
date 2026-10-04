@@ -2,9 +2,11 @@
 
 namespace Tests\Feature\Public;
 
+use App\Livewire\Public\ContactForm;
 use App\Mail\ContactMessageReceived;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
+use Livewire\Features\SupportTesting\Testable;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -16,7 +18,7 @@ class ContactFormTest extends TestCase
     {
         Mail::fake();
 
-        Livewire::test(\App\Livewire\Public\ContactForm::class)
+        Livewire::test(ContactForm::class)
             ->set('name', 'Jane Buyer')
             ->set('email', 'jane@example.com')
             ->set('subject', 'Question about a listing')
@@ -36,7 +38,7 @@ class ContactFormTest extends TestCase
     {
         Mail::fake();
 
-        Livewire::test(\App\Livewire\Public\ContactForm::class)
+        Livewire::test(ContactForm::class)
             ->set('name', 'Jane Buyer')
             ->set('email', 'not-an-email')
             ->set('subject', 'Question')
@@ -45,5 +47,29 @@ class ContactFormTest extends TestCase
             ->assertHasErrors(['email']);
 
         Mail::assertNotSent(ContactMessageReceived::class);
+    }
+
+    public function test_submissions_are_rate_limited_per_visitor(): void
+    {
+        Mail::fake();
+
+        for ($i = 0; $i < ContactForm::MAX_PER_HOUR; $i++) {
+            $this->sendContactMessage()->assertHasNoErrors();
+        }
+
+        $this->sendContactMessage()->assertHasErrors(['message']);
+
+        $this->assertDatabaseCount('contact_messages', ContactForm::MAX_PER_HOUR);
+        Mail::assertSentCount(ContactForm::MAX_PER_HOUR);
+    }
+
+    private function sendContactMessage(): Testable
+    {
+        return Livewire::test(ContactForm::class)
+            ->set('name', 'Jane Buyer')
+            ->set('email', 'jane@example.com')
+            ->set('subject', 'Question')
+            ->set('message', 'Hello there')
+            ->call('send');
     }
 }

@@ -15,6 +15,7 @@ use App\Models\Property;
 use App\Models\RefundRequest;
 use App\Services\Payment\FeaturedListingActivator;
 use App\Services\Payment\FeaturedListingRefundCalculator;
+use App\Support\Settings;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -23,6 +24,9 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Stripe\Checkout\Session;
+use Stripe\Exception\ApiErrorException;
+use Stripe\Stripe;
 
 #[Layout('layouts.app')]
 class ManageProperties extends Component
@@ -129,7 +133,7 @@ class ManageProperties extends Component
     {
         $this->authorize('feature', $property);
 
-        $tier = \App\Models\FeaturedPricingTier::where('is_active', true)->findOrFail($tierId);
+        $tier = FeaturedPricingTier::where('is_active', true)->findOrFail($tierId);
 
         $blockedMessage = null;
         $payment = null;
@@ -154,7 +158,7 @@ class ManageProperties extends Component
                 return;
             }
 
-            $maxFeatured = \App\Support\Settings::maxFeaturedListings();
+            $maxFeatured = Settings::maxFeaturedListings();
             $activeFeaturedCount = Property::where('is_featured', true)->where('featured_until', '>', now())->lockForUpdate()->count();
 
             if ($maxFeatured !== null && $activeFeaturedCount >= $maxFeatured) {
@@ -183,14 +187,14 @@ class ManageProperties extends Component
             return;
         }
 
-        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+        Stripe::setApiKey(config('services.stripe.secret'));
 
         try {
-            $session = \Stripe\Checkout\Session::create([
+            $session = Session::create([
                 'mode' => 'payment',
                 'line_items' => [[
                     'price_data' => [
-                        'currency' => 'pkr',
+                        'currency' => strtolower(Settings::currency()->value),
                         'unit_amount' => $tier->price_cents,
                         'product_data' => [
                             'name' => "Feature listing for {$tier->duration_days} days: {$property->title}",
@@ -209,7 +213,7 @@ class ManageProperties extends Component
             ], [
                 'idempotency_key' => "feature-payment-{$payment->id}",
             ]);
-        } catch (\Stripe\Exception\ApiErrorException $e) {
+        } catch (ApiErrorException $e) {
             report($e);
 
             $payment->update([
@@ -265,7 +269,7 @@ class ManageProperties extends Component
                 return;
             }
 
-            $maxFeatured = \App\Support\Settings::maxFeaturedListings();
+            $maxFeatured = Settings::maxFeaturedListings();
             $activeFeaturedCount = Property::where('is_featured', true)->where('featured_until', '>', now())->lockForUpdate()->count();
 
             if ($maxFeatured !== null && $activeFeaturedCount >= $maxFeatured) {
@@ -318,10 +322,10 @@ class ManageProperties extends Component
         }
 
         if ($payment->stripe_checkout_session_id !== null) {
-            \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+            Stripe::setApiKey(config('services.stripe.secret'));
 
             try {
-                $session = \Stripe\Checkout\Session::retrieve($payment->stripe_checkout_session_id);
+                $session = Session::retrieve($payment->stripe_checkout_session_id);
 
                 if ($session->payment_status === 'paid') {
                     app(FeaturedListingActivator::class)->activate($payment, $session->payment_intent);
@@ -336,7 +340,7 @@ class ManageProperties extends Component
                 if ($session->status === 'open') {
                     $session->expire();
                 }
-            } catch (\Stripe\Exception\ApiErrorException $e) {
+            } catch (ApiErrorException $e) {
                 report($e);
                 // Don't let a Stripe API hiccup leave the agent stuck — fall through
                 // and cancel the local payment record regardless.

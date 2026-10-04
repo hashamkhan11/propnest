@@ -3,14 +3,20 @@
 namespace App\Livewire\Agent;
 
 use App\Enums\Payment\PaymentStatus;
+use App\Enums\Property\PropertyStatus;
 use App\Enums\Subscription\AgentSubscriptionStatus;
 use App\Models\AgentSubscription;
 use App\Models\Payment;
+use App\Models\Property;
 use App\Models\SubscriptionPlan;
 use App\Services\Payment\SubscriptionActivator;
+use App\Support\Settings;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
+use Stripe\Checkout\Session;
+use Stripe\Exception\ApiErrorException;
+use Stripe\Stripe;
 
 #[Layout('layouts.app')]
 class SubscriptionPlans extends Component
@@ -70,14 +76,14 @@ class SubscriptionPlans extends Component
             return;
         }
 
-        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+        Stripe::setApiKey(config('services.stripe.secret'));
 
         try {
-            $session = \Stripe\Checkout\Session::create([
+            $session = Session::create([
                 'mode' => 'payment',
                 'line_items' => [[
                     'price_data' => [
-                        'currency' => 'pkr',
+                        'currency' => strtolower(Settings::currency()->value),
                         'unit_amount' => $plan->price_cents,
                         'product_data' => [
                             'name' => "{$plan->name} subscription ({$plan->duration_days} days)",
@@ -95,7 +101,7 @@ class SubscriptionPlans extends Component
             ], [
                 'idempotency_key' => "agent-subscription-{$subscription->id}",
             ]);
-        } catch (\Stripe\Exception\ApiErrorException $e) {
+        } catch (ApiErrorException $e) {
             report($e);
 
             $subscription->update([
@@ -147,10 +153,10 @@ class SubscriptionPlans extends Component
         }
 
         if ($subscription->stripe_checkout_session_id !== null) {
-            \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+            Stripe::setApiKey(config('services.stripe.secret'));
 
             try {
-                $session = \Stripe\Checkout\Session::retrieve($subscription->stripe_checkout_session_id);
+                $session = Session::retrieve($subscription->stripe_checkout_session_id);
 
                 if ($session->payment_status === 'paid') {
                     $activator->activate($subscription, $session->payment_intent);
@@ -165,7 +171,7 @@ class SubscriptionPlans extends Component
                 if ($session->status === 'open') {
                     $session->expire();
                 }
-            } catch (\Stripe\Exception\ApiErrorException $e) {
+            } catch (ApiErrorException $e) {
                 report($e);
             }
         }
@@ -200,15 +206,15 @@ class SubscriptionPlans extends Component
                 ->where('status', AgentSubscriptionStatus::Pending)
                 ->latest()
                 ->first(),
-            'activeListingCount' => \App\Models\Property::where('agent_id', $agentId)
+            'activeListingCount' => Property::where('agent_id', $agentId)
                 ->whereIn('status', [
-                    \App\Enums\Property\PropertyStatus::Draft,
-                    \App\Enums\Property\PropertyStatus::PendingReview,
-                    \App\Enums\Property\PropertyStatus::Published,
-                    \App\Enums\Property\PropertyStatus::UnderOffer,
+                    PropertyStatus::Draft,
+                    PropertyStatus::PendingReview,
+                    PropertyStatus::Published,
+                    PropertyStatus::UnderOffer,
                 ])
                 ->count(),
-            'freeListingLimit' => \App\Support\Settings::freeListingLimit(),
+            'freeListingLimit' => Settings::freeListingLimit(),
         ]);
     }
 }
