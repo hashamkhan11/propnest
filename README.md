@@ -1,16 +1,20 @@
 # PropNest
 
 [![tests](https://github.com/hashamkhan11/propnest/actions/workflows/tests.yml/badge.svg)](https://github.com/hashamkhan11/propnest/actions/workflows/tests.yml)
+![PHPStan level 5](https://img.shields.io/badge/PHPStan-level%205-2a5ea7)
+![PHP 8.3](https://img.shields.io/badge/PHP-8.3-777bb4)
+![Laravel 13](https://img.shields.io/badge/Laravel-13-ff2d20)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 A real estate marketplace where buyers search verified listings, agents sell subscriptions and featured placements, and admins moderate everything from one console.
 
 Built with **Laravel 13**, **Livewire 3 / Volt**, **Tailwind CSS**, **Stripe** and **Leaflet**.
 
-<!-- Add screenshots here once deployed:
-![Home](docs/screenshots/home.png)
-![Map search](docs/screenshots/map-search.png)
-![Admin analytics](docs/screenshots/admin-analytics.png)
--->
+| | |
+|---|---|
+| ![Home page](docs/screenshots/home.png) | ![Map search](docs/screenshots/map-search.png) |
+| ![Listing page](docs/screenshots/listing.png) | ![Admin analytics](docs/screenshots/admin-analytics.png) |
+| ![Moderation queue](docs/screenshots/admin-moderation.png) | ![Agent dashboard](docs/screenshots/agent-dashboard.png) |
 
 ## Features
 
@@ -49,7 +53,9 @@ Built with **Laravel 13**, **Livewire 3 / Volt**, **Tailwind CSS**, **Stripe** a
 | Frontend | Livewire 3, Volt, Alpine.js, Tailwind CSS, Vite |
 | Maps & charts | Leaflet + MarkerCluster, Chart.js |
 | Payments | Stripe Checkout, Refunds API, webhooks |
-| Testing | PHPUnit (270+ feature and unit tests) |
+| Testing | PHPUnit (280+ feature and unit tests) |
+| Quality | Laravel Pint, Larastan (PHPStan level 5), Eloquent strict mode, GitHub Actions |
+| Deployment | Docker (nginx + PHP-FPM), Render blueprint |
 
 ## Architecture notes
 
@@ -58,6 +64,24 @@ Built with **Laravel 13**, **Livewire 3 / Volt**, **Tailwind CSS**, **Stripe** a
 - **Enums** (`app/Enums`) model statuses for properties, payments, subscriptions, refunds and reports.
 - **Jobs** (`app/Jobs`) keep slow work like emails and image processing out of the request.
 - **Stripe** is the source of truth for payment state: checkout success pages only show status, and the webhook activates the payment.
+
+### Payment flow
+
+```mermaid
+sequenceDiagram
+    actor Agent
+    participant App as PropNest
+    participant Stripe
+    Agent->>App: Feature a listing / buy a plan
+    App->>App: Create pending Payment
+    App->>Stripe: Create Checkout Session
+    App-->>Agent: Redirect to Stripe Checkout
+    Agent->>Stripe: Pay
+    Stripe-->>Agent: Redirect to success page (shows status only)
+    Stripe->>App: Webhook checkout.session.completed
+    App->>App: Verify signature, mark Payment completed,<br/>feature listing or activate subscription
+    Note over App: checkout.session.expired cancels the payment.<br/>Scheduled commands expire featured listings and plans.
+```
 
 ## Getting started
 
@@ -104,6 +128,15 @@ It uses a fixed random seed, so every run builds the same data.
 
 Listing photos are public-domain (CC0) images from [StockSnap](https://stocksnap.io).
 
+### Run with Docker
+
+The production image (nginx + PHP-FPM) builds the frontend, runs migrations on start and, with `SEED_DEMO=true`, seeds the demo marketplace into a fresh SQLite database.
+
+```bash
+docker compose up --build
+# open http://localhost:8080
+```
+
 ### Optional integrations
 
 Add these to `.env` to enable payments and Google sign-in:
@@ -122,11 +155,19 @@ To receive webhooks locally: `stripe listen --forward-to localhost:8000/api/stri
 
 To run scheduled tasks locally: `php artisan schedule:work`
 
-## Tests
+## Tests and code quality
 
 ```bash
-php artisan test
+php artisan test     # 280+ feature and unit tests
+composer lint        # Laravel Pint
+composer analyse     # Larastan, PHPStan level 5
 ```
+
+CI runs all three on every push, then builds the Docker image, boots it with demo data and checks the public pages.
+
+## Deployment
+
+See [docs/deployment.md](docs/deployment.md) for a free live demo on Render and the settings a real production install needs.
 
 ## License
 
