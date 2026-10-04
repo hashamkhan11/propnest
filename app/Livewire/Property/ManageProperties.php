@@ -4,17 +4,16 @@ namespace App\Livewire\Property;
 
 use App\Enums\Payment\PaymentStatus;
 use App\Enums\Property\PropertyStatus;
-use App\Enums\RefundRequest\RefundRequestStatus;
 use App\Enums\Subscription\AgentSubscriptionStatus;
+use App\Exceptions\RefundRequestBlocked;
 use App\Jobs\MatchSavedSearchesForProperty;
 use App\Jobs\UnfeatureListing;
 use App\Models\AgentSubscription;
 use App\Models\FeaturedPricingTier;
 use App\Models\Payment;
 use App\Models\Property;
-use App\Models\RefundRequest;
 use App\Services\Payment\FeaturedListingActivator;
-use App\Services\Payment\FeaturedListingRefundCalculator;
+use App\Services\Payment\FeaturedRefundRequester;
 use App\Support\Settings;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -57,73 +56,18 @@ class ManageProperties extends Component
         $this->requestingRefundPropertyId = null;
     }
 
-    public function submitRefundRequest(Property $property): void
+    public function submitRefundRequest(Property $property, FeaturedRefundRequester $requester): void
     {
         $this->authorize('update', $property);
         $this->validate(['refundReason' => 'required|string|max:1000']);
 
-        $blockedMessage = null;
-
-        DB::transaction(function () use ($property, &$blockedMessage) {
-            $locked = Property::whereKey($property->id)->lockForUpdate()->firstOrFail();
-
-            if (! $locked->is_featured || ! $locked->featured_until?->isFuture()) {
-                $blockedMessage = 'This listing is not currently featured.';
-
-                return;
-            }
-
-            $payment = Payment::where('property_id', $locked->id)
-                ->where('status', PaymentStatus::Completed)
-                ->where('featured_until', $locked->featured_until)
-                ->latest()
-                ->lockForUpdate()
-                ->first();
-
-            if ($payment === null) {
-                $blockedMessage = 'No payment was found for this listing.';
-
-                return;
-            }
-
-            $hasPendingRequest = RefundRequest::where('payment_id', $payment->id)
-                ->where('status', RefundRequestStatus::Pending)
-                ->exists();
-
-            if ($hasPendingRequest) {
-                $blockedMessage = 'A refund request for this listing is already pending.';
-
-                return;
-            }
-
-            $hasRejectedRequest = RefundRequest::where('payment_id', $payment->id)
-                ->where('status', RefundRequestStatus::Rejected)
-                ->exists();
-
-            if ($hasRejectedRequest) {
-                $blockedMessage = 'A refund request for this payment was already rejected and cannot be resubmitted.';
-
-                return;
-            }
-
-            $refundAmountCents = app(FeaturedListingRefundCalculator::class)->calculateCents($payment, now());
-
-            RefundRequest::create([
-                'payment_id' => $payment->id,
-                'property_id' => $locked->id,
-                'agent_id' => auth()->id(),
-                'reason' => $this->refundReason,
-                'refund_amount_cents' => $refundAmountCents,
-                'status' => RefundRequestStatus::Pending,
-            ]);
-        });
-
         $this->requestingRefundPropertyId = null;
 
-        if ($blockedMessage !== null) {
-            session()->flash('error', $blockedMessage);
-        } else {
+        try {
+            $requester->request($property, Auth::user(), $this->refundReason);
             session()->flash('success', 'Refund request submitted. An admin will review it shortly.');
+        } catch (RefundRequestBlocked $e) {
+            session()->flash('error', $e->getMessage());
         }
 
         $this->redirect(route('agent.properties.index'), navigate: true);
