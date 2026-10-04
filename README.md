@@ -76,13 +76,33 @@ php artisan key:generate
 # SQLite is the default in .env.example
 touch database/database.sqlite
 php artisan migrate --seed
+php artisan db:seed --class=DemoSeeder   # optional: demo marketplace
 php artisan storage:link
 
 npm run build
 composer run dev   # starts the server, queue worker, log viewer and Vite
 ```
 
-Seeded login: `admin@propnest.test` / `password` (Super Admin).
+### Seed data
+
+`php artisan migrate --seed` creates only what a real install needs: settings, featured-listing pricing, subscription plans, amenities and one Super Admin. It is safe to run in production, where `ADMIN_PASSWORD` must be set.
+
+`DemoSeeder` adds a realistic marketplace:
+- 46 listings across 8 US cities, with photos, amenities and real neighborhood coordinates
+- 7 agents and 15 buyers
+- Subscriptions, featured placements and a year of payment history
+- Refund requests, inquiries, favorites, saved searches, reports and contact messages
+
+It uses a fixed random seed, so every run builds the same data.
+
+| Role | Email | Password |
+|---|---|---|
+| Super Admin | `admin@propnest.test` | `password` |
+| Admin | `moderator@propnest.test` | `password` |
+| Agent | `agent@propnest.test` | `password` |
+| Buyer | `buyer@propnest.test` | `password` |
+
+Listing photos are public-domain (CC0) images from [StockSnap](https://stocksnap.io).
 
 ### Optional integrations
 
