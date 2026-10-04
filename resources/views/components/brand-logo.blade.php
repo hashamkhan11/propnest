@@ -11,7 +11,7 @@
 
     @unless ($iconOnly)
         <span class="font-heading font-800 {{ $textSize }} leading-none whitespace-nowrap">
-            <span>Estate</span><span class="text-accent-500">Hub</span>
+            <span>Prop</span><span class="text-accent-500">Nest</span>
         </span>
     @endunless
 </span>
