@@ -7,6 +7,7 @@ use App\Models\Payment;
 use App\Models\Property;
 use App\Models\Report;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -19,13 +20,13 @@ class Analytics extends Component
 
         $revenueByMonth = Payment::where('status', PaymentStatus::Completed)
             ->where('created_at', '>=', $since)
-            ->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as month, SUM(amount) as total")
+            ->selectRaw($this->monthExpression().' as month, SUM(amount) as total')
             ->groupBy('month')
             ->orderBy('month')
             ->pluck('total', 'month');
 
         $usersByMonth = User::where('created_at', '>=', $since)
-            ->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as total")
+            ->selectRaw($this->monthExpression().' as month, COUNT(*) as total')
             ->groupBy('month')
             ->orderBy('month')
             ->pluck('total', 'month');
@@ -73,5 +74,15 @@ class Analytics extends Component
             'reportCountsByStatus' => $reportCountsByStatus,
             'refundTotal' => $refundTotal,
         ]);
+    }
+
+    // Each database spells "year-month of created_at" differently.
+    private function monthExpression(): string
+    {
+        return match (DB::connection()->getDriverName()) {
+            'sqlite' => "strftime('%Y-%m', created_at)",
+            'pgsql' => "to_char(created_at, 'YYYY-MM')",
+            default => "DATE_FORMAT(created_at, '%Y-%m')",
+        };
     }
 }
