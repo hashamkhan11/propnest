@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: shivammathur/setup-php@v2
         with:
@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: shivammathur/setup-php@v2
         with:
@@ -40,7 +40,7 @@ jobs:
           extensions: mbstring, pdo_sqlite, gd, intl
           coverage: none
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: '20'
           cache: npm
@@ -60,3 +60,43 @@ jobs:
 
       - name: Run tests
         run: php artisan test
+
+  docker:
+    name: Docker image
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Build image
+        run: docker build -t propnest .
+
+      - name: Start container with demo data
+        run: >
+          docker run -d --name propnest -p 8080:8080
+          -e APP_URL=http://localhost:8080
+          -e ADMIN_PASSWORD=password
+          -e SEED_DEMO=true
+          -e QUEUE_CONNECTION=sync
+          propnest
+
+      - name: Wait for the app to boot
+        run: |
+          for i in $(seq 1 60); do
+            curl -fs http://localhost:8080/up > /dev/null && exit 0
+            sleep 3
+          done
+          exit 1
+
+      - name: Smoke test public pages and seeded photos
+        run: |
+          curl -fsS -o /dev/null http://localhost:8080/
+          curl -fsS -o /dev/null http://localhost:8080/agents
+          html=$(curl -fsS http://localhost:8080/properties)
+          photo=$(echo "$html" | grep -oE 'http://localhost:8080/storage/[^"]+\.jpg' | head -1)
+          test -n "$photo"
+          curl -fsS -o /dev/null "$photo"
+
+      - name: Container logs
+        if: always()
+        run: docker logs propnest

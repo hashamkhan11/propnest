@@ -1,0 +1,37 @@
+# Live demo on Render's free plan. The free plan has no persistent disk, so
+# the SQLite database is rebuilt from DemoSeeder whenever the service starts.
+services:
+  - type: web
+    name: propnest
+    runtime: docker
+    plan: free
+    healthCheckPath: /up
+    envVars:
+      - key: PORT
+        value: "8080"
+      - key: APP_URL
+        sync: false
+      - key: APP_KEY
+        sync: false
+      - key: ADMIN_PASSWORD
+        value: password
+      - key: SEED_DEMO
+        value: "true"
+      - key: QUEUE_CONNECTION
+        value: sync
+      - key: MAIL_MAILER
+        value: log
+      - key: SESSION_SECURE_COOKIE
+        value: "true"
+      - key: STRIPE_KEY
+        sync: false
+      - key: STRIPE_SECRET
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GOOGLE_REDIRECT_URI
+        sync: false
