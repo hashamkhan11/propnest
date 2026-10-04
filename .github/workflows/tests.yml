@@ -93,9 +93,10 @@ jobs:
           curl -fsS -o /dev/null http://localhost:8080/
           curl -fsS -o /dev/null http://localhost:8080/agents
           html=$(curl -fsS http://localhost:8080/properties)
-          photo=$(echo "$html" | grep -oE 'http://localhost:8080/storage/[^"]+\.jpg' | head -1)
+          # Image paths sit inside escaped JSON, so drop the backslashes (\134) first.
+          photo=$(echo "$html" | tr -d '\134' | grep -oE '/storage/properties/thumbnails/[A-Za-z0-9]+\.jpg' | head -1)
           test -n "$photo"
-          curl -fsS -o /dev/null "$photo"
+          curl -fsS -o /dev/null "http://localhost:8080$photo"
 
       - name: Container logs
         if: always()

@@ -8,6 +8,7 @@
     "require": {
         "php": "^8.3",
         "blade-ui-kit/blade-heroicons": "^2.0",
+        "fakerphp/faker": "^1.23",
         "intervention/image": "^4.2",
         "laravel/framework": "^13.8",
         "laravel/sanctum": "^4.0",
@@ -19,7 +20,6 @@
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.7",
-        "fakerphp/faker": "^1.23",
         "larastan/larastan": "^3.12",
         "laravel/breeze": "^2.4",
         "laravel/pail": "^1.2.5",
