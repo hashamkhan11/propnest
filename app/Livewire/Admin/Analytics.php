@@ -7,6 +7,8 @@ use App\Models\Payment;
 use App\Models\Property;
 use App\Models\Report;
 use App\Models\User;
+use Carbon\CarbonInterface;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -23,7 +25,8 @@ class Analytics extends Component
             ->selectRaw($this->monthExpression().' as month, SUM(amount) as total')
             ->groupBy('month')
             ->orderBy('month')
-            ->pluck('total', 'month');
+            ->pluck('total', 'month')
+            ->map(fn ($cents) => $cents / 100);
 
         $usersByMonth = User::where('created_at', '>=', $since)
             ->selectRaw($this->monthExpression().' as month, COUNT(*) as total')
@@ -65,8 +68,8 @@ class Analytics extends Component
         $refundTotal = Payment::where('status', PaymentStatus::Refunded)->count();
 
         return view('livewire.admin.analytics', [
-            'revenueByMonth' => $revenueByMonth,
-            'usersByMonth' => $usersByMonth,
+            'revenueByMonth' => $this->lastTwelveMonths($revenueByMonth, $since),
+            'usersByMonth' => $this->lastTwelveMonths($usersByMonth, $since),
             'listingsByStatus' => $listingsByStatus,
             'listingsByCategory' => $listingsByCategory,
             'listingsByRegion' => $listingsByRegion,
@@ -74,6 +77,19 @@ class Analytics extends Component
             'reportCountsByStatus' => $reportCountsByStatus,
             'refundTotal' => $refundTotal,
         ]);
+    }
+
+    /**
+     * Fills in months with no rows so the chart's x-axis has no gaps.
+     *
+     * @param  Collection<string, int|float>  $totals  keyed by "Y-m"
+     * @return Collection<string, int|float> keyed by a "Nov 2025" label
+     */
+    private function lastTwelveMonths(Collection $totals, CarbonInterface $since): Collection
+    {
+        return collect(range(0, 11))
+            ->map(fn (int $offset) => $since->copy()->addMonths($offset))
+            ->mapWithKeys(fn (CarbonInterface $month) => [$month->format('M Y') => $totals->get($month->format('Y-m'), 0)]);
     }
 
     // Each database spells "year-month of created_at" differently.

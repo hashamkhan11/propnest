@@ -6,7 +6,7 @@
     />
 
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
-        <x-admin.stat-card label="Revenue (12mo)" :value="\App\Support\Settings::currency()->format($revenueByMonth->sum() / 100)" icon="banknotes" />
+        <x-admin.stat-card label="Revenue (12mo)" :value="\App\Support\Settings::currency()->format($revenueByMonth->sum())" icon="banknotes" />
         <x-admin.stat-card label="New Users (12mo)" :value="$usersByMonth->sum()" icon="users" />
         <x-admin.stat-card label="Total Listings" :value="$listingsByStatus->sum()" icon="building-office-2" />
         <x-admin.stat-card label="Refunded Payments" :value="$refundTotal" icon="arrow-uturn-left" color="accent" />
@@ -14,7 +14,7 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <x-card title="Revenue by Month">
-            @if ($revenueByMonth->isEmpty())
+            @if ($revenueByMonth->sum() == 0)
                 <x-empty-state title="No revenue yet" description="Completed payments will chart here.">
                     <x-slot name="icon">
                         <x-heroicon-o-banknotes class="w-7 h-7" />
@@ -24,13 +24,13 @@
                 <x-admin.chart
                     type="line"
                     :labels="$revenueByMonth->keys()->all()"
-                    :datasets="[['label' => 'Revenue (cents)', 'data' => $revenueByMonth->values()->all(), 'fill' => true, 'tension' => 0.3]]"
+                    :datasets="[['label' => 'Revenue', 'data' => $revenueByMonth->values()->all(), 'fill' => true, 'tension' => 0.3]]"
                 />
             @endif
         </x-card>
 
         <x-card title="New Users by Month">
-            @if ($usersByMonth->isEmpty())
+            @if ($usersByMonth->sum() == 0)
                 <x-empty-state title="No new users yet" description="New signups will chart here.">
                     <x-slot name="icon">
                         <x-heroicon-o-users class="w-7 h-7" />
