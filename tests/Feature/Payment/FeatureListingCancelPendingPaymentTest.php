@@ -4,10 +4,12 @@ namespace Tests\Feature\Payment;
 
 use App\Enums\Payment\PaymentStatus;
 use App\Livewire\Property\ManageProperties;
+use App\Models\FeaturedPricingTier;
 use App\Models\Payment;
 use App\Models\Property;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
+use Stripe\ApiRequestor;
 use Stripe\HttpClient\ClientInterface;
 use Tests\TestCase;
 
@@ -17,7 +19,7 @@ class FeatureListingCancelPendingPaymentTest extends TestCase
 
     protected function tearDown(): void
     {
-        \Stripe\ApiRequestor::setHttpClient(null);
+        ApiRequestor::setHttpClient(null);
 
         parent::tearDown();
     }
@@ -49,7 +51,7 @@ class FeatureListingCancelPendingPaymentTest extends TestCase
         // to create a new payment instead of hitting the "already in progress" guard.
         Livewire::actingAs($property->agent)
             ->test(ManageProperties::class)
-            ->call('feature', $property->id, \App\Models\FeaturedPricingTier::first()->id);
+            ->call('feature', $property->id, FeaturedPricingTier::first()->id);
 
         $this->assertNotSame(
             'A payment for this listing is already in progress. You can cancel it below to try again.',
@@ -71,7 +73,7 @@ class FeatureListingCancelPendingPaymentTest extends TestCase
             'featured_until' => now()->addDays(30),
         ]);
 
-        \Stripe\ApiRequestor::setHttpClient(new class implements ClientInterface
+        ApiRequestor::setHttpClient(new class implements ClientInterface
         {
             public function request($method, $absUrl, $headers, $params, $hasFile, $apiMode = 'v1', $maxNetworkRetries = null)
             {

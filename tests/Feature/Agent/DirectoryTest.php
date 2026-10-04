@@ -3,7 +3,6 @@
 namespace Tests\Feature\Agent;
 
 use App\Enums\Property\PropertyStatus;
-use App\Models\AgentProfile;
 use App\Models\Property;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;

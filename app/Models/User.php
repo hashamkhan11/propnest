@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Enums\Subscription\AgentSubscriptionStatus;
+use App\Enums\User\UserRole;
+use App\Enums\User\UserStatus;
 use App\Observers\UserObserver;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -35,8 +38,8 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'last_login_at' => 'datetime',
             'password' => 'hashed',
-            'role' => \App\Enums\User\UserRole::class,
-            'status' => \App\Enums\User\UserStatus::class,
+            'role' => UserRole::class,
+            'status' => UserStatus::class,
             'suspended_at' => 'datetime',
         ];
     }
@@ -78,7 +81,7 @@ class User extends Authenticatable
     public function activeAgentSubscription(): HasOne
     {
         return $this->hasOne(AgentSubscription::class, 'agent_id')
-            ->where('status', \App\Enums\Subscription\AgentSubscriptionStatus::Active)
+            ->where('status', AgentSubscriptionStatus::Active)
             ->where('expires_at', '>', now())
             ->latestOfMany();
     }

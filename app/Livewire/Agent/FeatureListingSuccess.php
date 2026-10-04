@@ -8,6 +8,9 @@ use App\Models\Property;
 use App\Services\Payment\FeaturedListingActivator;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
+use Stripe\Checkout\Session;
+use Stripe\Exception\ApiErrorException;
+use Stripe\Stripe;
 
 #[Layout('layouts.app')]
 class FeatureListingSuccess extends Component
@@ -42,11 +45,11 @@ class FeatureListingSuccess extends Component
             return;
         }
 
-        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+        Stripe::setApiKey(config('services.stripe.secret'));
 
         try {
-            $session = \Stripe\Checkout\Session::retrieve($sessionId);
-        } catch (\Stripe\Exception\ApiErrorException $e) {
+            $session = Session::retrieve($sessionId);
+        } catch (ApiErrorException $e) {
             report($e);
 
             return;

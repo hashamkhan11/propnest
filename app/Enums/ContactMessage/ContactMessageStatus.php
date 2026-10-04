@@ -2,6 +2,8 @@
 
 namespace App\Enums\ContactMessage;
 
+use Illuminate\Support\Str;
+
 enum ContactMessageStatus: string
 {
     case New = 'new';
@@ -10,7 +12,7 @@ enum ContactMessageStatus: string
 
     public function label(): string
     {
-        return \Illuminate\Support\Str::headline($this->value);
+        return Str::headline($this->value);
     }
 
     public function badgeVariant(): string

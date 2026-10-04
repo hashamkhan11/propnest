@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Enums\User\UserRole;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Volt\Volt;
 use Tests\TestCase;
@@ -54,7 +56,7 @@ class RegistrationTest extends TestCase
 
         $component->call('register');
 
-        $this->assertSame(\App\Enums\User\UserRole::Buyer, \App\Models\User::where('email', 'buyer@example.com')->first()->role);
+        $this->assertSame(UserRole::Buyer, User::where('email', 'buyer@example.com')->first()->role);
     }
 
     public function test_registering_as_agent_creates_an_agent_profile(): void
@@ -68,9 +70,9 @@ class RegistrationTest extends TestCase
 
         $component->call('register');
 
-        $user = \App\Models\User::where('email', 'agent@example.com')->first();
+        $user = User::where('email', 'agent@example.com')->first();
 
-        $this->assertSame(\App\Enums\User\UserRole::Agent, $user->role);
+        $this->assertSame(UserRole::Agent, $user->role);
         $this->assertNotNull($user->agentProfile);
     }
 

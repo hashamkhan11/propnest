@@ -2,6 +2,8 @@
 
 namespace App\Enums\Subscriber;
 
+use Illuminate\Support\Str;
+
 enum SubscriberStatus: string
 {
     case Active = 'active';
@@ -9,7 +11,7 @@ enum SubscriberStatus: string
 
     public function label(): string
     {
-        return \Illuminate\Support\Str::headline($this->value);
+        return Str::headline($this->value);
     }
 
     public function badgeVariant(): string

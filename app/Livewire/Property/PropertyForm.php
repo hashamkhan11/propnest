@@ -8,7 +8,10 @@ use App\Enums\Property\PropertyType;
 use App\Enums\User\UserRole;
 use App\Jobs\ProcessPropertyImage;
 use App\Models\Amenity;
+use App\Models\City;
 use App\Models\Property;
+use App\Models\PropertyCategory;
+use App\Support\Settings;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Layout;
@@ -111,7 +114,7 @@ class PropertyForm extends Component
             return $subscription->listing_limit;
         }
 
-        return \App\Support\Settings::freeListingLimit();
+        return Settings::freeListingLimit();
     }
 
     /**
@@ -124,7 +127,7 @@ class PropertyForm extends Component
             return false;
         }
 
-        $slug = \App\Models\PropertyCategory::find($this->categoryId)?->slug;
+        $slug = PropertyCategory::find($this->categoryId)?->slug;
 
         return in_array($slug, [PropertyType::Land->value, PropertyType::Commercial->value], true);
     }
@@ -158,8 +161,8 @@ class PropertyForm extends Component
     {
         $this->validate();
 
-        $category = \App\Models\PropertyCategory::findOrFail($this->categoryId);
-        $city = \App\Models\City::findOrFail($this->cityId);
+        $category = PropertyCategory::findOrFail($this->categoryId);
+        $city = City::findOrFail($this->cityId);
 
         $attributes = [
             'title' => $this->title,
@@ -256,10 +259,10 @@ class PropertyForm extends Component
     public function render()
     {
         return view('livewire.property.property-form', [
-            'categories' => \App\Models\PropertyCategory::where('is_active', true)->orderBy('name')->get(),
+            'categories' => PropertyCategory::where('is_active', true)->orderBy('name')->get(),
             'purposes' => PropertyPurpose::cases(),
             'amenities' => Amenity::orderBy('name')->get(),
-            'citiesByRegion' => \App\Models\City::with('region')->orderBy('name')->get()->groupBy(fn ($c) => $c->region->name),
+            'citiesByRegion' => City::with('region')->orderBy('name')->get()->groupBy(fn ($c) => $c->region->name),
         ]);
     }
 }

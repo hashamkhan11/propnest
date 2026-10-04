@@ -2,7 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Enums\Property\PropertyStatus;
+use App\Enums\Property\PropertyType;
+use App\Models\City;
 use App\Models\Property;
+use App\Models\PropertyCategory;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -20,18 +25,18 @@ class PropertyCityTest extends TestCase
     public function test_existing_rows_default_to_unspecified_when_city_is_omitted(): void
     {
         $property = Property::create([
-            'agent_id' => \App\Models\User::factory()->agent()->create()->id,
+            'agent_id' => User::factory()->agent()->create()->id,
             'title' => 'Test Property',
             'description' => 'Test description',
             'price' => 100000,
-            'property_type' => \App\Enums\Property\PropertyType::House,
-            'category_id' => \App\Models\PropertyCategory::where('slug', 'house')->value('id'),
-            'city_id' => \App\Models\City::factory()->create()->id,
+            'property_type' => PropertyType::House,
+            'category_id' => PropertyCategory::where('slug', 'house')->value('id'),
+            'city_id' => City::factory()->create()->id,
             'bedrooms' => 3,
             'bathrooms' => 2,
             'area' => 1200,
             'address' => '123 Test St',
-            'status' => \App\Enums\Property\PropertyStatus::Draft,
+            'status' => PropertyStatus::Draft,
         ]);
 
         $this->assertSame('Unspecified', $property->fresh()->city);

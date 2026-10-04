@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Enums\User\UserRole;
 use App\Enums\User\UserStatus;
 use App\Livewire\Admin\UserManagement;
 use App\Models\User;
@@ -108,7 +109,7 @@ class UserManagementTest extends TestCase
         Livewire::actingAs($superAdmin)->test(UserManagement::class)
             ->call('promoteToSuperAdmin', $admin->id);
 
-        $this->assertEquals(\App\Enums\User\UserRole::SuperAdmin, $admin->refresh()->role);
+        $this->assertEquals(UserRole::SuperAdmin, $admin->refresh()->role);
     }
 
     public function test_normal_admin_cannot_promote_another_admin_to_super_admin(): void
@@ -119,7 +120,7 @@ class UserManagementTest extends TestCase
         Livewire::actingAs($admin)->test(UserManagement::class)
             ->call('promoteToSuperAdmin', $otherAdmin->id);
 
-        $this->assertEquals(\App\Enums\User\UserRole::Admin, $otherAdmin->refresh()->role);
+        $this->assertEquals(UserRole::Admin, $otherAdmin->refresh()->role);
     }
 
     public function test_normal_admin_cannot_demote_a_super_admin(): void
@@ -130,7 +131,7 @@ class UserManagementTest extends TestCase
         Livewire::actingAs($admin)->test(UserManagement::class)
             ->call('demoteToAdmin', $superAdmin->id);
 
-        $this->assertEquals(\App\Enums\User\UserRole::SuperAdmin, $superAdmin->refresh()->role);
+        $this->assertEquals(UserRole::SuperAdmin, $superAdmin->refresh()->role);
     }
 
     public function test_super_admin_can_demote_another_super_admin_to_admin(): void
@@ -141,7 +142,7 @@ class UserManagementTest extends TestCase
         Livewire::actingAs($superAdmin)->test(UserManagement::class)
             ->call('demoteToAdmin', $otherSuperAdmin->id);
 
-        $this->assertEquals(\App\Enums\User\UserRole::Admin, $otherSuperAdmin->refresh()->role);
+        $this->assertEquals(UserRole::Admin, $otherSuperAdmin->refresh()->role);
     }
 
     public function test_super_admin_cannot_demote_themselves(): void
@@ -152,7 +153,7 @@ class UserManagementTest extends TestCase
         Livewire::actingAs($superAdmin)->test(UserManagement::class)
             ->call('demoteToAdmin', $superAdmin->id);
 
-        $this->assertEquals(\App\Enums\User\UserRole::SuperAdmin, $superAdmin->refresh()->role);
+        $this->assertEquals(UserRole::SuperAdmin, $superAdmin->refresh()->role);
     }
 
     public function test_last_remaining_super_admin_cannot_be_demoted(): void
@@ -162,6 +163,6 @@ class UserManagementTest extends TestCase
         Livewire::actingAs($superAdmin)->test(UserManagement::class)
             ->call('demoteToAdmin', $superAdmin->id);
 
-        $this->assertEquals(\App\Enums\User\UserRole::SuperAdmin, $superAdmin->refresh()->role);
+        $this->assertEquals(UserRole::SuperAdmin, $superAdmin->refresh()->role);
     }
 }

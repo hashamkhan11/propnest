@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\Payment\PaymentStatus;
 use App\Enums\RefundRequest\RefundRequestStatus;
 use Carbon\CarbonInterface;
+use Database\Factories\PaymentFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 #[Fillable(['property_id', 'agent_id', 'featured_pricing_tier_id', 'agent_subscription_id', 'stripe_checkout_session_id', 'stripe_payment_intent_id', 'amount', 'status', 'failure_reason', 'featured_from', 'featured_until', 'refunded_at', 'stripe_refund_id'])]
 class Payment extends Model
 {
-    /** @use HasFactory<\Database\Factories\PaymentFactory> */
+    /** @use HasFactory<PaymentFactory> */
     use HasFactory;
 
     protected function casts(): array

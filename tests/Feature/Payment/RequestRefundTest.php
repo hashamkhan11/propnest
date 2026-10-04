@@ -8,6 +8,7 @@ use App\Livewire\Property\ManageProperties;
 use App\Models\Payment;
 use App\Models\Property;
 use App\Models\RefundRequest;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;
@@ -118,7 +119,7 @@ class RequestRefundTest extends TestCase
             'status' => PaymentStatus::Completed,
         ]);
 
-        $otherAgent = \App\Models\User::factory()->agent()->create();
+        $otherAgent = User::factory()->agent()->create();
 
         Livewire::actingAs($otherAgent)->test(ManageProperties::class)
             ->set('refundReason', 'Not mine')

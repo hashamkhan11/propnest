@@ -14,7 +14,9 @@ use Livewire\Component;
 class SocialRoleSelection extends Component
 {
     public string $role = '';
+
     public string $pendingName = '';
+
     public string $pendingEmail = '';
 
     public function mount(): void

@@ -2,6 +2,8 @@
 
 namespace App\Enums\Property;
 
+use Illuminate\Support\Str;
+
 enum PropertyStatus: string
 {
     case Draft = 'draft';
@@ -34,7 +36,7 @@ enum PropertyStatus: string
 
     public function label(): string
     {
-        return \Illuminate\Support\Str::headline($this->value);
+        return Str::headline($this->value);
     }
 
     public function badgeVariant(): string

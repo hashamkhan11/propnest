@@ -4,6 +4,7 @@ namespace Tests\Feature\Payment;
 
 use App\Enums\Payment\PaymentStatus;
 use App\Livewire\Property\ManageProperties;
+use App\Models\FeaturedPricingTier;
 use App\Models\Payment;
 use App\Models\Property;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -29,7 +30,7 @@ class FeatureListingGuardTest extends TestCase
 
         Livewire::actingAs($property->agent)
             ->test(ManageProperties::class)
-            ->call('feature', $property->id, \App\Models\FeaturedPricingTier::first()->id);
+            ->call('feature', $property->id, FeaturedPricingTier::first()->id);
 
         $this->assertSame(1, Payment::where('property_id', $property->id)->count());
         $this->assertSame(
@@ -47,7 +48,7 @@ class FeatureListingGuardTest extends TestCase
 
         Livewire::actingAs($property->agent)
             ->test(ManageProperties::class)
-            ->call('feature', $property->id, \App\Models\FeaturedPricingTier::first()->id);
+            ->call('feature', $property->id, FeaturedPricingTier::first()->id);
 
         $this->assertSame(0, Payment::where('property_id', $property->id)->count());
         $this->assertSame('This listing is already featured.', session('error'));

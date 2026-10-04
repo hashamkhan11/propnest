@@ -7,6 +7,7 @@ use App\Enums\Property\PropertyStatus;
 use App\Models\Property;
 use App\Services\Property\PropertySearchService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class PropertyMapPinsTest extends TestCase
@@ -81,6 +82,6 @@ class PropertyMapPinsTest extends TestCase
 
         $this->assertCount(1, $pins);
         $this->assertNotNull($pin['thumbnail']);
-        $this->assertSame(\Illuminate\Support\Facades\Storage::url($imagePath), $pin['thumbnail']);
+        $this->assertSame(Storage::url($imagePath), $pin['thumbnail']);
     }
 }

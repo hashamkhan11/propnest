@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Property;
 
+use App\Livewire\Property\PropertyForm;
 use App\Models\City;
 use App\Models\PropertyCategory;
 use App\Models\User;
@@ -21,7 +22,7 @@ class PropertyFormCityTest extends TestCase
         $city = City::factory()->create(['name' => 'Karachi']);
 
         Livewire::actingAs($agent)
-            ->test(\App\Livewire\Property\PropertyForm::class)
+            ->test(PropertyForm::class)
             ->set('title', 'Test Property')
             ->set('description', 'A description')
             ->set('price', '250000')
@@ -43,7 +44,7 @@ class PropertyFormCityTest extends TestCase
         $category = PropertyCategory::where('slug', 'house')->firstOrFail();
 
         Livewire::actingAs($agent)
-            ->test(\App\Livewire\Property\PropertyForm::class)
+            ->test(PropertyForm::class)
             ->set('title', 'Test Property')
             ->set('description', 'A description')
             ->set('price', '250000')

@@ -2,6 +2,8 @@
 
 namespace App\Enums\User;
 
+use Illuminate\Support\Str;
+
 enum UserRole: string
 {
     case Buyer = 'buyer';
@@ -11,7 +13,7 @@ enum UserRole: string
 
     public function label(): string
     {
-        return \Illuminate\Support\Str::headline($this->value);
+        return Str::headline($this->value);
     }
 
     public function badgeVariant(): string

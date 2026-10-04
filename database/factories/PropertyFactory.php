@@ -5,7 +5,9 @@ namespace Database\Factories;
 use App\Enums\Property\PropertyPurpose;
 use App\Enums\Property\PropertyStatus;
 use App\Enums\Property\PropertyType;
+use App\Models\City;
 use App\Models\Property;
+use App\Models\PropertyCategory;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,8 +20,8 @@ class PropertyFactory extends Factory
 
     public function definition(): array
     {
-        $category = \App\Models\PropertyCategory::inRandomOrder()->first();
-        $city = \App\Models\City::inRandomOrder()->first() ?? \App\Models\City::factory()->create();
+        $category = PropertyCategory::inRandomOrder()->first();
+        $city = City::inRandomOrder()->first() ?? City::factory()->create();
 
         return [
             'agent_id' => User::factory()->agent(),

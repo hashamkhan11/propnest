@@ -9,6 +9,9 @@ use App\Models\RefundRequest;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
+use Stripe\Exception\ApiErrorException;
+use Stripe\Refund;
+use Stripe\Stripe;
 
 #[Layout('layouts.admin', ['title' => 'Refund Requests'])]
 class RefundRequestsQueue extends Component
@@ -69,14 +72,14 @@ class RefundRequestsQueue extends Component
 
         $refundAmountCents = $refundRequest->refund_amount_cents ?? $payment->amount;
 
-        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+        Stripe::setApiKey(config('services.stripe.secret'));
 
         try {
-            $refund = \Stripe\Refund::create([
+            $refund = Refund::create([
                 'payment_intent' => $payment->stripe_payment_intent_id,
                 'amount' => $refundAmountCents,
             ]);
-        } catch (\Stripe\Exception\ApiErrorException $e) {
+        } catch (ApiErrorException $e) {
             report($e);
 
             $this->dispatch('toast', type: 'error', message: 'Stripe refund failed. Please try again in a moment.');

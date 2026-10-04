@@ -3,6 +3,7 @@
 namespace Tests\Feature\Auth;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -39,6 +40,6 @@ class LastLoginBackfillTest extends TestCase
         $lastLoginAt = DB::table('users')->where('id', $userId)->value('last_login_at');
 
         $this->assertNotNull($lastLoginAt);
-        $this->assertEquals($oldCreatedAt->toDateTimeString(), \Carbon\Carbon::parse($lastLoginAt)->toDateTimeString());
+        $this->assertEquals($oldCreatedAt->toDateTimeString(), Carbon::parse($lastLoginAt)->toDateTimeString());
     }
 }

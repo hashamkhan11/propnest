@@ -13,6 +13,8 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Bus;
 use Livewire\Livewire;
+use Stripe\ApiRequestor;
+use Stripe\Exception\ApiConnectionException;
 use Stripe\HttpClient\ClientInterface;
 use Tests\TestCase;
 
@@ -22,14 +24,14 @@ class PaymentRefundTest extends TestCase
 
     protected function tearDown(): void
     {
-        \Stripe\ApiRequestor::setHttpClient(null);
+        ApiRequestor::setHttpClient(null);
 
         parent::tearDown();
     }
 
     private function fakeSuccessfulStripeRefund(): void
     {
-        \Stripe\ApiRequestor::setHttpClient(new class implements ClientInterface
+        ApiRequestor::setHttpClient(new class implements ClientInterface
         {
             public function request($method, $absUrl, $headers, $params, $hasFile, $apiMode = 'v1', $maxNetworkRetries = null)
             {
@@ -104,7 +106,7 @@ class PaymentRefundTest extends TestCase
         {
             public ?array $params = null;
         };
-        \Stripe\ApiRequestor::setHttpClient(new class($capture) implements ClientInterface
+        ApiRequestor::setHttpClient(new class($capture) implements ClientInterface
         {
             public function __construct(private object $capture) {}
 
@@ -177,11 +179,11 @@ class PaymentRefundTest extends TestCase
             'status' => RefundRequestStatus::Pending,
         ]);
 
-        \Stripe\ApiRequestor::setHttpClient(new class implements ClientInterface
+        ApiRequestor::setHttpClient(new class implements ClientInterface
         {
             public function request($method, $absUrl, $headers, $params, $hasFile, $apiMode = 'v1', $maxNetworkRetries = null)
             {
-                throw new \Stripe\Exception\ApiConnectionException('Network error');
+                throw new ApiConnectionException('Network error');
             }
         });
 

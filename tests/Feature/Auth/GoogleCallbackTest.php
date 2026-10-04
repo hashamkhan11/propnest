@@ -16,7 +16,7 @@ class GoogleCallbackTest extends TestCase
 
     private function fakeGoogleUser(string $id, string $email, string $name = 'Test User', bool $emailVerified = true): void
     {
-        $socialiteUser = new SocialiteUser();
+        $socialiteUser = new SocialiteUser;
         $socialiteUser->id = $id;
         $socialiteUser->email = $email;
         $socialiteUser->name = $name;

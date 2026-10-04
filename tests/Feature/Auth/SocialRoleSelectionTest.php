@@ -3,6 +3,7 @@
 namespace Tests\Feature\Auth;
 
 use App\Enums\User\UserRole;
+use App\Livewire\Auth\SocialRoleSelection;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -42,7 +43,7 @@ class SocialRoleSelectionTest extends TestCase
     {
         $this->withSession(['social_pending_user' => $this->pending()]);
 
-        Livewire::test(\App\Livewire\Auth\SocialRoleSelection::class)
+        Livewire::test(SocialRoleSelection::class)
             ->set('role', '')
             ->call('continue')
             ->assertHasErrors(['role']);
@@ -54,7 +55,7 @@ class SocialRoleSelectionTest extends TestCase
     {
         $this->withSession(['social_pending_user' => $this->pending()]);
 
-        Livewire::test(\App\Livewire\Auth\SocialRoleSelection::class)
+        Livewire::test(SocialRoleSelection::class)
             ->set('role', 'buyer')
             ->call('continue')
             ->assertRedirect(route('dashboard', absolute: false));
@@ -73,7 +74,7 @@ class SocialRoleSelectionTest extends TestCase
     {
         $this->withSession(['social_pending_user' => $this->pending()]);
 
-        Livewire::test(\App\Livewire\Auth\SocialRoleSelection::class)
+        Livewire::test(SocialRoleSelection::class)
             ->set('role', 'agent')
             ->call('continue');
 
@@ -87,7 +88,7 @@ class SocialRoleSelectionTest extends TestCase
     {
         $this->withSession(['social_pending_user' => $this->pending()]);
 
-        Livewire::test(\App\Livewire\Auth\SocialRoleSelection::class)
+        Livewire::test(SocialRoleSelection::class)
             ->call('cancel')
             ->assertRedirect(route('login'));
 

@@ -11,9 +11,7 @@ class NewsletterSubscribedMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public Subscriber $subscriber)
-    {
-    }
+    public function __construct(public Subscriber $subscriber) {}
 
     public function build(): self
     {

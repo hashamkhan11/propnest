@@ -2,6 +2,8 @@
 
 namespace App\Enums\RefundRequest;
 
+use Illuminate\Support\Str;
+
 enum RefundRequestStatus: string
 {
     case Pending = 'pending';
@@ -10,7 +12,7 @@ enum RefundRequestStatus: string
 
     public function label(): string
     {
-        return \Illuminate\Support\Str::headline($this->value);
+        return Str::headline($this->value);
     }
 
     public function badgeVariant(): string

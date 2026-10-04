@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\Report\ReportReason;
 use App\Enums\Report\ReportStatus;
+use Database\Factories\ReportFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[Fillable(['property_id', 'reported_by_user_id', 'reason', 'details', 'status', 'resolved_by_user_id', 'resolved_at'])]
 class Report extends Model
 {
-    /** @use HasFactory<\Database\Factories\ReportFactory> */
+    /** @use HasFactory<ReportFactory> */
     use HasFactory;
 
     protected function casts(): array

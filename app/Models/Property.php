@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Payment\PaymentStatus;
 use App\Enums\Property\PropertyPurpose;
 use App\Enums\Property\PropertyStatus;
 use App\Enums\Property\PropertyType;
@@ -93,7 +94,7 @@ class Property extends Model
     public function pendingPayment(): HasOne
     {
         return $this->hasOne(Payment::class)
-            ->where('status', \App\Enums\Payment\PaymentStatus::Pending)
+            ->where('status', PaymentStatus::Pending)
             ->latestOfMany();
     }
 

@@ -4,9 +4,11 @@ namespace App\Livewire\Admin;
 
 use App\Enums\Payment\PaymentStatus;
 use App\Enums\Property\PropertyStatus;
+use App\Enums\Report\ReportStatus;
 use App\Enums\User\UserRole;
 use App\Models\Payment;
 use App\Models\Property;
+use App\Models\Report;
 use App\Models\User;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -21,7 +23,7 @@ class Dashboard extends Component
             'totalAgents' => User::where('role', UserRole::Agent)->count(),
             'totalBuyers' => User::where('role', UserRole::Buyer)->count(),
             'totalAdmins' => User::where('role', UserRole::Admin)->count(),
-            'pendingReportsCount' => \App\Models\Report::where('status', \App\Enums\Report\ReportStatus::Pending)->count(),
+            'pendingReportsCount' => Report::where('status', ReportStatus::Pending)->count(),
             'totalProperties' => Property::count(),
             'featuredCount' => Property::where('is_featured', true)->where('featured_until', '>', now())->count(),
             'pendingReviewCount' => Property::where('status', PropertyStatus::PendingReview)->count(),

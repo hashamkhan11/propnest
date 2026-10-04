@@ -2,6 +2,8 @@
 
 namespace App\Enums\User;
 
+use Illuminate\Support\Str;
+
 enum UserStatus: string
 {
     case Active = 'active';
@@ -9,7 +11,7 @@ enum UserStatus: string
 
     public function label(): string
     {
-        return \Illuminate\Support\Str::headline($this->value);
+        return Str::headline($this->value);
     }
 
     public function badgeVariant(): string

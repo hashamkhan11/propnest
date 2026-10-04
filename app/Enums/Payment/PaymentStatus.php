@@ -2,6 +2,8 @@
 
 namespace App\Enums\Payment;
 
+use Illuminate\Support\Str;
+
 enum PaymentStatus: string
 {
     case Pending = 'pending';
@@ -15,7 +17,7 @@ enum PaymentStatus: string
     {
         return match ($this) {
             self::Pending => 'Processing',
-            default => \Illuminate\Support\Str::headline($this->value),
+            default => Str::headline($this->value),
         };
     }
 

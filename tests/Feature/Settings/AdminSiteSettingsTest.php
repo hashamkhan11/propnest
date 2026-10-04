@@ -3,6 +3,7 @@
 namespace Tests\Feature\Settings;
 
 use App\Enums\Settings\Currency;
+use App\Livewire\Admin\SiteSettings;
 use App\Models\User;
 use App\Support\Settings;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -25,7 +26,7 @@ class AdminSiteSettingsTest extends TestCase
         $admin = User::factory()->admin()->create();
 
         Livewire::actingAs($admin)
-            ->test(\App\Livewire\Admin\SiteSettings::class)
+            ->test(SiteSettings::class)
             ->set('currency', 'AED')
             ->call('save')
             ->assertHasNoErrors();

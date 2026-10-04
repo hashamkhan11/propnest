@@ -4,6 +4,7 @@ namespace Tests\Feature\Public;
 
 use App\Enums\Property\PropertyStatus;
 use App\Enums\Property\PropertyType;
+use App\Livewire\Public\Home;
 use App\Models\Property;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -17,7 +18,7 @@ class HomepageTest extends TestCase
         $response = $this->get('/');
 
         $response->assertOk();
-        $response->assertSeeLivewire(\App\Livewire\Public\Home::class);
+        $response->assertSeeLivewire(Home::class);
     }
 
     public function test_homepage_shows_featured_and_latest_properties(): void

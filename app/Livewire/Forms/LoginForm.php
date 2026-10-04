@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Forms;
 
+use App\Enums\User\UserStatus;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
@@ -38,7 +39,7 @@ class LoginForm extends Form
             ]);
         }
 
-        if (Auth::user()->status === \App\Enums\User\UserStatus::Suspended) {
+        if (Auth::user()->status === UserStatus::Suspended) {
             Auth::logout();
 
             throw ValidationException::withMessages([

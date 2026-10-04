@@ -2,6 +2,8 @@
 
 namespace App\Enums\Subscription;
 
+use Illuminate\Support\Str;
+
 enum AgentSubscriptionStatus: string
 {
     case Pending = 'pending';
@@ -14,7 +16,7 @@ enum AgentSubscriptionStatus: string
     {
         return match ($this) {
             self::Pending => 'Processing',
-            default => \Illuminate\Support\Str::headline($this->value),
+            default => Str::headline($this->value),
         };
     }
 
