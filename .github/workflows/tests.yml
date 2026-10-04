@@ -6,6 +6,28 @@ on:
   pull_request:
 
 jobs:
+  quality:
+    name: Code style & static analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, pdo_sqlite, gd, intl
+          coverage: none
+
+      - name: Install PHP dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Pint
+        run: composer lint
+
+      - name: Larastan
+        run: composer analyse -- --no-progress
+
   tests:
     runs-on: ubuntu-latest
 

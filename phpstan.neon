@@ -1,0 +1,23 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    paths:
+        - app
+        - database/seeders
+        - routes
+    level: 5
+
+    ignoreErrors:
+        # Socialite's Provider contract omits with(); the Google driver implements it.
+        -
+            identifier: method.notFound
+            path: app/Http/Controllers/Auth/SocialAuthController.php
+        # Stripe event payloads are dynamic StripeObject instances.
+        -
+            identifier: property.notFound
+            path: app/Http/Controllers/StripeWebhookController.php
+        # The route is behind `auth`, so the user is always present.
+        -
+            identifier: argument.type
+            path: app/Http/Controllers/Auth/VerifyEmailController.php

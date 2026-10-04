@@ -56,8 +56,10 @@ class DemoActivitySeeder extends Seeder
         'It is about a 10-minute walk. The school ratings are in the listing packet I just emailed you.',
     ];
 
+    /** @var Collection<int, User> */
     private Collection $buyers;
 
+    /** @var Collection<int, Property> */
     private Collection $published;
 
     private User $moderator;
@@ -82,7 +84,7 @@ class DemoActivitySeeder extends Seeder
     {
         $plans = SubscriptionPlan::pluck('id', 'name');
 
-        // [agent email, plan, status, started days ago]
+        /** @var list<array{string, string, AgentSubscriptionStatus, int}> $subscriptions agent email, plan, status, started days ago */
         $subscriptions = [
             [DemoUserSeeder::AGENT_EMAIL, 'Professional', AgentSubscriptionStatus::Expired, 42],
             [DemoUserSeeder::AGENT_EMAIL, 'Professional', AgentSubscriptionStatus::Active, 12],

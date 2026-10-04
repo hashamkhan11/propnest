@@ -14,6 +14,7 @@ use App\Services\Property\PropertyImageThumbnailService;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use InvalidArgumentException;
 
 class DemoListingSeeder extends Seeder
 {
@@ -187,7 +188,7 @@ class DemoListingSeeder extends Seeder
         PropertyStatus $status, int $categoryId, int $cityId,
     ): Property {
         $city = LocationSeeder::CITIES[$cityName];
-        [, $lat, $lng, $street] = collect($city['neighborhoods'])->firstWhere(0, $hood);
+        [, $lat, $lng, $street] = collect($city['neighborhoods'])->first(fn (array $n) => $n[0] === $hood);
 
         [$bedrooms, $bathrooms, $area] = $this->size($type);
         $price = $this->price($type, $purpose, $cityName, $bedrooms);
@@ -235,6 +236,7 @@ class DemoListingSeeder extends Seeder
             'apartment' => [$beds = mt_rand(1, 3), max(1, $beds - 1), $this->roundTo(350 + $beds * mt_rand(280, 360), 10)],
             'commercial' => [0, mt_rand(1, 3), $this->roundTo(mt_rand(1_800, 6_500), 50)],
             'land' => [0, 0, $this->roundTo(mt_rand(10, 80) * 43_560 / 40, 10)],
+            default => throw new InvalidArgumentException("Unknown property type [{$type}]."),
         };
     }
 
@@ -266,6 +268,7 @@ class DemoListingSeeder extends Seeder
                     ? ['Retail Space', 'Creative Office Space', 'Street-Level Storefront']
                     : ['Mixed-Use Building', 'Retail Building', 'Office Building'])." on {$street}",
                 'land' => number_format($area / 43_560, 2).'-Acre Residential Lot in '.$hood,
+                default => throw new InvalidArgumentException("Unknown property type [{$type}]."),
             };
         } while (isset($this->usedTitles[$title]));
 

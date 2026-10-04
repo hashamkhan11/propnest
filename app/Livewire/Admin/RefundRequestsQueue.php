@@ -64,7 +64,7 @@ class RefundRequestsQueue extends Component
 
         $payment = $refundRequest->payment;
 
-        if ($payment === null || $payment->status !== PaymentStatus::Completed) {
+        if ($payment->status !== PaymentStatus::Completed) {
             $this->dispatch('toast', type: 'error', message: 'This payment can no longer be refunded.');
 
             return;

@@ -18,7 +18,9 @@
         "stripe/stripe-php": "^21.0"
     },
     "require-dev": {
+        "barryvdh/laravel-ide-helper": "^3.7",
         "fakerphp/faker": "^1.23",
+        "larastan/larastan": "^3.12",
         "laravel/breeze": "^2.4",
         "laravel/pail": "^1.2.5",
         "laravel/pint": "^1.27",
@@ -55,6 +57,8 @@
             "@php artisan config:clear --ansi @no_additional_args",
             "@php artisan test"
         ],
+        "lint": "pint --test",
+        "analyse": "phpstan analyse --memory-limit=1G",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"

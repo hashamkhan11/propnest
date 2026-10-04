@@ -42,7 +42,7 @@ class PropertySearchService
     }
 
     /**
-     * @return Collection<int, array{id: int, lat: float, lng: float, price: float, formattedPrice: string, title: string, purpose: string, thumbnail: ?string, url: string}>
+     * @return Collection<int, array{id: int, lat: float, lng: float, price: float, formattedPrice: string, title: string, purpose: value-of<PropertyPurpose>, thumbnail: ?string, url: string}>
      */
     public function pinsFor(PropertySearchFilters $filters, int $limit = 500): Collection
     {
@@ -68,6 +68,10 @@ class PropertySearchService
         ])->values();
     }
 
+    /**
+     * @param  Builder<Property>  $query
+     * @return Builder<Property>
+     */
     private function applyFilters(Builder $query, PropertySearchFilters $filters): Builder
     {
         return $query
@@ -135,6 +139,10 @@ class PropertySearchService
         ))->withQueryString();
     }
 
+    /**
+     * @param  Collection<int, Property>  $properties
+     * @return Collection<int, Property>
+     */
     private function sortGeoResults(Collection $properties, PropertySearchFilters $filters): Collection
     {
         [$column, $direction] = $this->sortColumn($filters->sort);

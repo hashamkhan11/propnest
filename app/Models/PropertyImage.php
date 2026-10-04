@@ -5,7 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property int $property_id
+ * @property string $path
+ * @property bool $is_cover
+ * @property int $sort_order
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property string|null $thumbnail_path
+ * @property string|null $optimized_path
+ * @property-read Property $property
+ */
 #[Fillable(['property_id', 'path', 'thumbnail_path', 'optimized_path', 'is_cover', 'sort_order'])]
 class PropertyImage extends Model
 {
@@ -16,6 +29,7 @@ class PropertyImage extends Model
         ];
     }
 
+    /** @return BelongsTo<Property, $this> */
     public function property(): BelongsTo
     {
         return $this->belongsTo(Property::class);

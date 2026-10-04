@@ -24,9 +24,10 @@ class AgentDashboard extends Component
             'unreadInquiriesCount' => Inquiry::where('agent_id', Auth::id())->whereNull('read_at')->count(),
             'totalViewsCount' => (clone $base)->sum('views_count'),
             'totalInquiriesCount' => Inquiry::where('agent_id', Auth::id())->count(),
-            'profileIncomplete' => blank(Auth::user()->agentProfile?->agency_name)
-                || blank(Auth::user()->agentProfile?->phone)
-                || blank(Auth::user()->agentProfile?->bio),
+            // UserObserver creates the profile when an agent registers.
+            'profileIncomplete' => blank(Auth::user()->agentProfile->agency_name)
+                || blank(Auth::user()->agentProfile->phone)
+                || blank(Auth::user()->agentProfile->bio),
         ]);
     }
 }

@@ -4,7 +4,6 @@ namespace App\Livewire\Buyer;
 
 use App\Enums\User\UserRole;
 use App\Services\Property\CompareListService;
-use Illuminate\Support\Collection;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -44,11 +43,6 @@ class CompareBar extends Component
         $this->dispatch('compare-updated');
     }
 
-    public function getPropertiesProperty(): Collection
-    {
-        return app(CompareListService::class)->publishedProperties();
-    }
-
     private function isBuyer(): bool
     {
         return auth()->check() && auth()->user()->role === UserRole::Buyer;
@@ -57,7 +51,7 @@ class CompareBar extends Component
     public function render()
     {
         return view('livewire.buyer.compare-bar', [
-            'properties' => $this->properties,
+            'properties' => app(CompareListService::class)->publishedProperties(),
         ]);
     }
 }
