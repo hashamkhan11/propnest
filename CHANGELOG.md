@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+- Live demo at [propnest.gencodix.com](https://propnest.gencodix.com).
+- Custom domain steps in the deployment guide.
+
 ## [1.0.0] - 2026-10-04
 
 First public release.

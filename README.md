@@ -10,6 +10,8 @@ A real estate marketplace where buyers search verified listings, agents sell sub
 
 Built with **Laravel 13**, **Livewire 3 / Volt**, **Tailwind CSS**, **Stripe** and **Leaflet**.
 
+**Live demo: [propnest.gencodix.com](https://propnest.gencodix.com)**. Sign in with any [demo account](#seed-data) (password `password`). The demo resets itself on every restart, and the first visit after a quiet spell can take about a minute while the free server wakes up.
+
 | | |
 |---|---|
 | ![Home page](docs/screenshots/home.png) | ![Map search](docs/screenshots/map-search.png) |
@@ -167,7 +169,7 @@ CI runs all three on every push, then builds the Docker image, boots it with dem
 
 ## Deployment
 
-See [docs/deployment.md](docs/deployment.md) for a free live demo on Render and the settings a real production install needs.
+The [live demo](https://propnest.gencodix.com) runs on Render's free plan behind a custom domain. See [docs/deployment.md](docs/deployment.md) for how to deploy your own copy and the settings a real production install needs.
 
 ## License
 

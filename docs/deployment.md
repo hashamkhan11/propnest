@@ -22,6 +22,14 @@ Render's free web service runs the image with no persistent disk. PropNest uses 
 
 If Render gives the service a different URL than the one you entered, update `APP_URL` under **Environment** and the service restarts.
 
+### Custom domain (optional)
+
+1. In the service's **Settings > Custom Domains**, add a subdomain such as `demo.example.com`.
+2. At your DNS provider, add a `CNAME` record from that subdomain to the service's `onrender.com` host. On Cloudflare, set it to **DNS only** (grey cloud) so Render can issue the certificate.
+3. When Render shows **Certificate Issued**, set `APP_URL` to the new address.
+
+Some internet providers cache the "domain not found" answer for up to an hour. If the domain works on mobile data but not at home, wait or switch the browser to secure DNS.
+
 ### What to expect
 
 - The free service sleeps after 15 minutes without traffic. The next visit wakes it up in about a minute, then reseeds the demo (around 15 seconds).
