@@ -1,8 +1,8 @@
 <?php
 
-use App\Enums\Payment\PaymentStatus;
-use App\Enums\Subscription\AgentSubscriptionStatus;
 use App\Enums\User\UserRole;
+use App\Http\Controllers\Agent\CancelFeatureCheckoutController;
+use App\Http\Controllers\Agent\CancelSubscriptionCheckoutController;
 use App\Livewire\Admin\AgentVerification;
 use App\Livewire\Admin\Analytics;
 use App\Livewire\Admin\ContactMessagesQueue;
@@ -35,9 +35,6 @@ use App\Livewire\Property\PropertyDetail;
 use App\Livewire\Property\PropertyForm;
 use App\Livewire\Property\PropertySearch;
 use App\Livewire\Public\Home;
-use App\Models\AgentSubscription;
-use App\Models\Payment;
-use App\Models\Property;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', Home::class)->name('home');
@@ -68,39 +65,11 @@ Route::middleware(['auth', 'role:agent'])->prefix('agent')->name('agent.')->grou
     Route::get('/properties/create', PropertyForm::class)->name('properties.create');
     Route::get('/properties/{property}/edit', PropertyForm::class)->name('properties.edit');
     Route::get('/inquiries', InquiryInbox::class)->name('inquiries.index');
-    Route::get('/properties/{property}/feature/cancel', function (Property $property) {
-        $sessionId = request()->query('session_id');
-
-        if ($sessionId) {
-            Payment::where('property_id', $property->id)
-                ->where('stripe_checkout_session_id', $sessionId)
-                ->where('status', PaymentStatus::Pending)
-                ->update(['status' => PaymentStatus::Cancelled]);
-        }
-
-        session()->flash('error', 'Payment cancelled — your listing was not featured. You can try again anytime from My Listings.');
-
-        return redirect()->route('agent.properties.index');
-    })->name('properties.feature.cancel');
+    Route::get('/properties/{property}/feature/cancel', CancelFeatureCheckoutController::class)->name('properties.feature.cancel');
     Route::get('/properties/{property}/feature/success', FeatureListingSuccess::class)->name('properties.feature.success');
     Route::get('/subscriptions', SubscriptionPlans::class)->name('subscriptions.index');
     Route::get('/subscriptions/{subscription}/success', SubscriptionSuccess::class)->name('subscriptions.success');
-    Route::get('/subscriptions/{subscription}/cancel', function (AgentSubscription $subscription) {
-        abort_unless($subscription->agent_id === auth()->id(), 403);
-
-        $sessionId = request()->query('session_id');
-
-        if ($sessionId) {
-            AgentSubscription::where('id', $subscription->id)
-                ->where('stripe_checkout_session_id', $sessionId)
-                ->where('status', AgentSubscriptionStatus::Pending)
-                ->update(['status' => AgentSubscriptionStatus::Cancelled]);
-        }
-
-        session()->flash('error', 'Payment cancelled — your subscription was not activated. You can try again anytime.');
-
-        return redirect()->route('agent.subscriptions.index');
-    })->name('subscriptions.cancel');
+    Route::get('/subscriptions/{subscription}/cancel', CancelSubscriptionCheckoutController::class)->name('subscriptions.cancel');
 });
 
 Route::middleware(['auth', 'role:admin,super_admin'])->prefix('admin')->name('admin.')->group(function () {

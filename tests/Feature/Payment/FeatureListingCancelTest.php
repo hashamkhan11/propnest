@@ -5,6 +5,7 @@ namespace Tests\Feature\Payment;
 use App\Enums\Payment\PaymentStatus;
 use App\Models\Payment;
 use App\Models\Property;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -49,5 +50,26 @@ class FeatureListingCancelTest extends TestCase
             ->get(route('agent.properties.feature.cancel', $property).'?session_id=cs_cancel_2');
 
         $this->assertSame(PaymentStatus::Completed, $payment->fresh()->status);
+    }
+
+    public function test_another_agent_cannot_cancel_someone_elses_checkout(): void
+    {
+        $property = Property::factory()->create();
+        $otherAgent = User::factory()->agent()->create();
+
+        $payment = Payment::create([
+            'property_id' => $property->id,
+            'agent_id' => $property->agent_id,
+            'stripe_checkout_session_id' => 'cs_cancel_3',
+            'amount' => 1000000,
+            'status' => PaymentStatus::Pending,
+            'featured_until' => now()->addDays(30),
+        ]);
+
+        $this->actingAs($otherAgent)
+            ->get(route('agent.properties.feature.cancel', $property).'?session_id=cs_cancel_3')
+            ->assertForbidden();
+
+        $this->assertSame(PaymentStatus::Pending, $payment->fresh()->status);
     }
 }
