@@ -56,7 +56,7 @@ class HomepageTest extends TestCase
 
         $response = $this->get('/');
 
-        $response->assertSee('Browse by City');
+        $response->assertSee('Where people are looking');
         $response->assertSee('Karachi');
     }
 

@@ -1,17 +1,18 @@
-<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="max-w-5xl px-4 sm:px-6 lg:px-8 py-10">
     <x-admin.page-header
-        title="Moderation Queue"
+        kicker="Listings"
+        title="Review queue"
         icon="shield-check"
-        :subtitle="$pendingReview->count() . ' ' . \Illuminate\Support\Str::plural('listing', $pendingReview->count()) . ' pending review'"
+        :subtitle="$pendingReview->count() . ' ' . \Illuminate\Support\Str::plural('listing', $pendingReview->count()) . ' waiting. Nothing goes live until someone here approves it.'"
     />
 
-    <x-card title="Pending Review" class="mb-6">
-        <div class="space-y-3">
+    <x-card title="Waiting for review" class="mb-6">
+        <div class="divide-y divide-gray-900/10 -my-1">
             @forelse ($pendingReview as $property)
-                <div wire:key="pending-{{ $property->id }}" class="border border-gray-100 rounded-xl p-4">
+                <div wire:key="pending-{{ $property->id }}" class="py-4">
                     <div class="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-3 sm:gap-4 sm:items-center">
                         <div class="min-w-0">
-                            <div class="font-heading font-700 text-gray-900 flex items-center gap-2 flex-wrap">
+                            <div class="font-medium text-primary-900 flex items-center gap-2 flex-wrap">
                                 {{ $property->title }}
                                 <x-badge :variant="$property->has_been_published ? 'warning' : 'gray'">
                                     {{ $property->has_been_published ? 'Edited — re-approval needed' : 'New listing' }}
@@ -34,7 +35,7 @@
                             </x-button>
 
                             @if ($rejectingPropertyId !== $property->id)
-                                <x-button variant="danger" wire:click="startReject({{ $property->id }})">
+                                <x-button variant="ghost-danger" wire:click="startReject({{ $property->id }})">
                                     Reject
                                 </x-button>
                             @endif
@@ -42,9 +43,9 @@
                     </div>
 
                     @if ($rejectingPropertyId === $property->id)
-                        <div class="mt-4 border-t border-gray-100 pt-4">
+                        <div class="mt-4 border-t border-gray-900/10 pt-4">
                             <x-input-label for="rejectionReason" value="Reason for rejection" />
-                            <textarea wire:model="rejectionReason" id="rejectionReason" rows="3" class="border-gray-300 focus:border-primary-600 focus:ring-primary-600 rounded-md shadow-sm w-full"></textarea>
+                            <textarea wire:model="rejectionReason" id="rejectionReason" rows="3" class="border-gray-300 focus:border-primary-900 focus:ring-primary-900 rounded-md w-full"></textarea>
                             <x-input-error :messages="$errors->get('rejectionReason')" class="mt-2" />
 
                             <div class="mt-3 flex gap-2">
@@ -64,19 +65,19 @@
         </div>
     </x-card>
 
-    <x-card title="Published Listings">
+    <x-card title="Live listings">
         <div class="mb-4">
             <x-input-label for="keyword" value="Search" />
             <x-input wire:model.live.debounce.400ms="keyword" id="keyword" type="text" placeholder="Search title or agent name" />
         </div>
 
-        <div class="space-y-3">
+        <div class="divide-y divide-gray-900/10 -my-1">
             @forelse ($published as $property)
-                <div wire:key="published-{{ $property->id }}" class="border border-gray-100 rounded-xl p-4">
+                <div wire:key="published-{{ $property->id }}" class="py-4">
                     <div class="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-3 sm:gap-4 sm:items-center">
                         <div class="min-w-0">
-                            <div class="font-heading font-700 text-gray-900">{{ $property->title }}</div>
-                            <div class="text-sm text-gray-500">{{ $property->agent->name }} &middot; <x-price :amount="$property->price" /></div>
+                            <div class="font-semibold text-gray-900">{{ $property->title }}</div>
+                            <div class="text-sm text-gray-500">{{ $property->agent->name }} &middot; <x-price whole :amount="$property->price" /></div>
                         </div>
 
                         <div class="flex items-center gap-2 sm:justify-end">
@@ -85,15 +86,15 @@
                                 x-on:click="$store.confirmDialog.open({
                                     title: 'Pull for review?',
                                     message: 'Pull {{ addslashes($property->title) }} for review. The agent will be notified.',
-                                    confirmText: 'Pull for Review',
+                                    confirmText: 'Send back',
                                     onConfirm: () => $wire.pullForReview({{ $property->id }}),
                                 })"
                             >
-                                Pull for Review
+                                Send back to review
                             </x-button>
 
                             @if ($rejectingPropertyId !== $property->id)
-                                <x-button variant="danger" wire:click="startReject({{ $property->id }})">
+                                <x-button variant="ghost-danger" wire:click="startReject({{ $property->id }})">
                                     Reject
                                 </x-button>
                             @endif
@@ -101,9 +102,9 @@
                     </div>
 
                     @if ($rejectingPropertyId === $property->id)
-                        <div class="mt-4 border-t border-gray-100 pt-4">
+                        <div class="mt-4 border-t border-gray-900/10 pt-4">
                             <x-input-label for="rejectionReason" value="Reason for rejection" />
-                            <textarea wire:model="rejectionReason" id="rejectionReason" rows="3" class="border-gray-300 focus:border-primary-600 focus:ring-primary-600 rounded-md shadow-sm w-full"></textarea>
+                            <textarea wire:model="rejectionReason" id="rejectionReason" rows="3" class="border-gray-300 focus:border-primary-900 focus:ring-primary-900 rounded-md w-full"></textarea>
                             <x-input-error :messages="$errors->get('rejectionReason')" class="mt-2" />
 
                             <div class="mt-3 flex gap-2">

@@ -8,6 +8,17 @@ All notable changes to this project are documented here. The format follows [Kee
 - Live demo at [propnest.gencodix.com](https://propnest.gencodix.com).
 - Custom domain steps in the deployment guide.
 
+### Changed
+- Redesigned the whole interface: new logo and favicon, a warm paper and ink palette with a terracotta accent, Geist and Instrument Serif type, and hairline card layouts across the public site, agent workspace and admin console.
+- Rewrote interface copy in plain sentence case.
+- Rebuilt the admin analytics page with headline figures, monthly user signups and top agents ranked by revenue.
+- Map clusters now match the brand colors.
+- Refreshed the README screenshots.
+
+### Fixed
+- The featured-listing success page showed a fractional number of days left.
+- The favicon file was empty.
+
 ## [1.0.0] - 2026-10-04
 
 First public release.

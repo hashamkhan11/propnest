@@ -1,338 +1,335 @@
-@php use Illuminate\Support\Str; @endphp
+@php
+    use Illuminate\Support\Facades\Storage;
+    use Illuminate\Support\Str;
+
+    $heroProperty = $featuredProperties->first(fn ($p) => $p->coverImage) ?? $latestProperties->first(fn ($p) => $p->coverImage);
+@endphp
 
 <div>
-    {{-- Hero --}}
-    <section class="relative bg-primary-900">
-        <div class="absolute inset-0" style="background: linear-gradient(180deg, rgba(9,38,39,.75), rgba(9,38,39,.88)), url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1600&h=700&fit=crop') center/cover;"></div>
+    {{-- Hero: the headline and search on the left, a real listing on the right --}}
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-14 lg:pt-16 pb-16">
+        <div class="grid lg:grid-cols-12 gap-10 lg:gap-14 items-end">
+            <div class="lg:col-span-7">
+                <p class="kicker flex items-center gap-2">
+                    <span class="inline-block w-1.5 h-1.5 rounded-full bg-accent-500"></span>
+                    {{ number_format($propertyCount) }} {{ Str::plural('home', $propertyCount) }} live in {{ $cityCount }} {{ Str::plural('city', $cityCount) }}
+                </p>
 
-        <div class="relative max-w-4xl mx-auto px-4 pt-24 sm:pt-28 pb-14 text-center">
-            <p class="font-heading font-700 text-accent-400 text-sm uppercase tracking-[0.2em] mb-3">Premium Real Estate Marketplace</p>
-            <h1 class="font-heading font-800 text-4xl sm:text-5xl text-white leading-tight">Find your next home,<br class="hidden sm:block"> for sale or for rent</h1>
-            <p class="mt-4 text-primary-100 text-base sm:text-lg max-w-xl mx-auto">Search verified listings from trusted agents across every city on PropNest.</p>
-        </div>
+                <h1 class="display text-[3.4rem] sm:text-7xl xl:text-[5.6rem] mt-6">
+                    Find a place<br>
+                    that feels like <em class="text-accent-600">yours.</em>
+                </h1>
 
-        <form wire:submit="search" class="relative max-w-3xl mx-auto px-4 z-10">
-            <div class="bg-white rounded-2xl shadow-2xl ring-1 ring-black/5 p-2.5 sm:p-3 flex flex-col sm:flex-row sm:items-center gap-2">
-                <div class="flex-1 flex items-center gap-2.5 px-3 py-2.5 sm:py-1">
-                    <svg class="w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" />
-                    </svg>
-                    <input wire:model="location" type="text" placeholder="Search by city, neighborhood, or keyword..." class="w-full border-0 focus:ring-0 text-sm px-0 placeholder:text-gray-400">
-                </div>
+                <p class="mt-6 text-[17px] text-gray-600 max-w-lg leading-relaxed">
+                    Homes for sale and rent from agents we have verified. Real photos, the real price, and a direct line to the person selling.
+                </p>
 
-                <div class="hidden sm:block w-px h-8 bg-gray-100"></div>
-
-                <div class="relative flex items-center gap-2 px-3 sm:px-2">
-                    <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9.5L12 3l9 6.5V21a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1V9.5z" />
-                    </svg>
-                    <select wire:model="purpose" class="border-0 focus:ring-0 text-sm pl-0 pr-7 py-2.5 sm:py-1 rounded-none bg-transparent">
-                        <option value="">For Sale or Rent</option>
-                        @foreach ($purposes as $option)
-                            <option value="{{ $option->value }}">{{ $option->label() }}</option>
+                <form wire:submit="search" class="mt-9 max-w-xl" x-data>
+                    <div class="inline-flex p-1 rounded-md bg-gray-900/5 text-sm mb-3" role="radiogroup" aria-label="Buy or rent">
+                        @foreach (['' => 'Any', 'for_sale' => 'Buy', 'for_rent' => 'Rent'] as $value => $label)
+                            <label class="cursor-pointer">
+                                <input type="radio" wire:model="purpose" value="{{ $value }}" class="peer sr-only">
+                                <span class="block px-4 py-1.5 rounded text-gray-600 peer-checked:bg-white peer-checked:text-primary-900 peer-checked:shadow-sm peer-focus-visible:ring-2 peer-focus-visible:ring-accent-500 transition">{{ $label }}</span>
+                            </label>
                         @endforeach
-                    </select>
+                    </div>
+
+                    <div class="flex items-stretch bg-white rounded-md ring-1 ring-gray-900/10 shadow-lg focus-within:ring-primary-900 transition">
+                        <label for="hero-location" class="flex-1 flex items-center gap-3 pl-4">
+                            <svg class="w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                            </svg>
+                            <span class="sr-only">City, neighborhood or keyword</span>
+                            <input id="hero-location" wire:model="location" type="text" placeholder="City, neighborhood or street" class="w-full border-0 focus:ring-0 text-[15px] px-0 py-4 placeholder:text-gray-400 bg-transparent">
+                        </label>
+                        <button type="submit" class="m-1.5 px-5 sm:px-6 rounded bg-primary-900 hover:bg-primary-800 text-white text-sm font-medium inline-flex items-center gap-2 transition-colors">
+                            Search
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
+                        </button>
+                    </div>
+
+                    @error('location')
+                        <p class="mt-2 text-sm text-red-700">{{ $message }}</p>
+                    @enderror
+
+                    @if ($cityCounts->isNotEmpty())
+                        <p class="mt-4 text-sm text-gray-500">
+                            Popular:
+                            @foreach ($cityCounts->keys()->take(4) as $city)
+                                <a href="{{ route('properties.index', ['location' => $city]) }}" wire:navigate class="text-primary-900 link-underline">{{ $city }}</a>@if (! $loop->last)<span class="text-gray-300 mx-1.5">/</span>@endif
+                            @endforeach
+                        </p>
+                    @endif
+                </form>
+            </div>
+
+            <div class="lg:col-span-5">
+                @if ($heroProperty)
+                    <a href="{{ route('properties.show', $heroProperty) }}" wire:navigate class="group block relative">
+                        <div class="aspect-[4/5] rounded-lg overflow-hidden bg-gray-200">
+                            <img src="{{ Storage::url($heroProperty->coverImage->displayPath()) }}" alt="{{ $heroProperty->title }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]">
+                        </div>
+                        <div class="absolute left-4 right-4 bottom-4 sm:left-auto sm:right-[-1rem] sm:bottom-8 sm:w-72 bg-white rounded-md p-4 shadow-xl">
+                            <p class="kicker">{{ $heroProperty->is_featured ? 'Featured this week' : 'Just listed' }}</p>
+                            <p class="mt-2 font-medium text-primary-900 truncate">{{ $heroProperty->title }}</p>
+                            <div class="mt-1 flex items-baseline justify-between gap-3">
+                                <span class="text-sm text-gray-500 truncate">{{ $heroProperty->city }}</span>
+                                <span class="figure font-semibold text-primary-900 whitespace-nowrap"><x-price whole :amount="$heroProperty->price" />@if ($heroProperty->purpose === \App\Enums\Property\PropertyPurpose::ForRent)<span class="text-gray-500 font-normal text-sm">/mo</span>@endif</span>
+                            </div>
+                        </div>
+                    </a>
+                @endif
+            </div>
+        </div>
+
+        {{-- Facts strip --}}
+        <dl class="mt-16 grid grid-cols-2 lg:grid-cols-4 border-y border-gray-900/10">
+            @foreach ([
+                [number_format($propertyCount), Str::plural('Home', $propertyCount).' on the market'],
+                [number_format($agentCount), 'Verified '.Str::plural('agent', $agentCount)],
+                [number_format($cityCount), Str::plural('City', $cityCount).' covered'],
+                ['$0', 'Cost to search and message agents'],
+            ] as [$value, $label])
+                <div class="flex flex-col-reverse gap-1 py-6 px-4 sm:px-6 border-gray-900/10 [&:nth-child(even)]:border-l [&:nth-child(n+3)]:border-t lg:[&:nth-child(n+3)]:border-t-0 lg:[&:nth-child(3)]:border-l">
+                    <dt class="text-sm text-gray-500">{{ $label }}</dt>
+                    <dd class="display text-4xl sm:text-5xl figure">{{ $value }}</dd>
                 </div>
-
-                <x-button type="submit" variant="accent" class="justify-center sm:w-auto w-full py-3 sm:py-2.5 shrink-0">
-                    <svg class="w-4 h-4 mr-1.5 -ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" />
-                    </svg>
-                    Search
-                </x-button>
-            </div>
-
-            @error('location')
-                <p class="mt-2 text-sm text-accent-300 text-center">{{ $message }}</p>
-            @enderror
-        </form>
-
-        <div class="relative flex flex-wrap justify-center gap-x-10 gap-y-2 pt-6 pb-4 text-white text-sm">
-            <div class="flex items-center gap-2">
-                <svg class="w-4 h-4 text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Verified Listings
-            </div>
-            <div class="flex items-center gap-2">
-                <svg class="w-4 h-4 text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m5-2.13a4 4 0 100-8 4 4 0 000 8zm6 2.13a4 4 0 100-8" />
-                </svg>
-                Trusted Agents
-            </div>
-            <div class="flex items-center gap-2">
-                <svg class="w-4 h-4 text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9.5L12 3l9 6.5V21a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1V9.5z" />
-                </svg>
-                Buy &amp; Rent
-            </div>
-        </div>
-
-        <div class="relative text-center pb-10">
-            <p class="inline-flex items-center gap-2 text-primary-200 text-sm">
-                <span class="font-heading font-700 text-white text-base">{{ number_format($propertyCount) }}+</span>
-                verified {{ Str::plural('property', $propertyCount) }} &middot;
-                <span class="font-heading font-700 text-white text-base">{{ number_format($agentCount) }}+</span>
-                trusted {{ Str::plural('agent', $agentCount) }}
-            </p>
-        </div>
+            @endforeach
+        </dl>
     </section>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        {{-- Featured Properties --}}
+        {{-- Featured --}}
         @if ($featuredProperties->isNotEmpty())
-            <section class="py-12 sm:py-14">
-                <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-50 via-white to-white border border-primary-100 px-6 py-8 sm:px-10 sm:py-10">
-                    <div class="absolute -top-10 -right-10 w-56 h-56 rounded-full bg-accent-400/10"></div>
-
-                    <div class="relative flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
-                        <x-section-heading eyebrow="Hand-picked" title="Featured Properties" subtitle="Premium listings selected for their quality, location, and value." align="left" />
-                        <a href="{{ route('properties.index', ['featured' => 1]) }}" wire:navigate class="shrink-0">
-                            <x-button variant="accent" class="w-full sm:w-auto justify-center">
-                                View All Featured Properties
-                                <svg class="w-4 h-4 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                            </x-button>
-                        </a>
-                    </div>
-
-                    <div class="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        @foreach ($featuredProperties as $property)
-                            <x-property-card :property="$property" />
-                        @endforeach
-                    </div>
-                </div>
-            </section>
-        @endif
-
-        {{-- Browse by Category --}}
-        @if (count($propertyTypes) > 0)
-            <section class="py-12 sm:py-14">
-                <x-section-heading eyebrow="Explore" title="Browse by Category" class="mb-8" />
-                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5">
-                    @foreach ($propertyTypes as $type)
-                        <a href="{{ route('properties.index', ['propertyType' => $type->value]) }}" wire:navigate class="group relative flex items-end h-36 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-                            <div class="absolute inset-0 bg-gradient-to-br from-primary-700 to-primary-900 group-hover:scale-105 transition-transform duration-500"></div>
-                            <div class="absolute inset-0 bg-black/10"></div>
-                            <div class="relative p-4 text-white">
-                                <div class="font-heading font-700 truncate">{{ Str::headline($type->value) }}</div>
-                                <div class="text-sm text-primary-200">{{ $propertyTypeCounts[$type->value] ?? 0 }} {{ Str::plural('listing', $propertyTypeCounts[$type->value] ?? 0) }}</div>
-                            </div>
-                        </a>
-                    @endforeach
-                </div>
-            </section>
-        @endif
-
-        {{-- Browse by City --}}
-        @if ($cityCounts->isNotEmpty())
-            <section class="py-12 sm:py-14">
-                <x-section-heading eyebrow="Nationwide" title="Browse by City" class="mb-8" />
-                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
-                    @foreach ($cityCounts as $city => $total)
-                        <a href="{{ route('properties.index', ['location' => $city]) }}" wire:navigate class="group relative flex items-end h-36 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-                            <div class="absolute inset-0 bg-gradient-to-br from-primary-700 to-primary-900 group-hover:scale-105 transition-transform duration-500"></div>
-                            <div class="absolute inset-0 bg-black/10"></div>
-                            <div class="relative p-4 text-white">
-                                <div class="font-heading font-700 truncate">{{ $city }}</div>
-                                <div class="text-sm text-primary-200">{{ $total }} {{ Str::plural('listing', $total) }}</div>
-                            </div>
-                        </a>
-                    @endforeach
-                </div>
-            </section>
-        @endif
-
-        {{-- Why Choose PropNest --}}
-        <section class="py-12 sm:py-14">
-            <x-section-heading eyebrow="Benefits" title="Why Choose PropNest" class="mb-8" />
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                @foreach ([
-                    ['title' => 'Verified Property Listings', 'desc' => 'Every published listing goes through our agent verification process before it goes live.', 'icon' => 'M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
-                    ['title' => 'Trusted Agents', 'desc' => 'Connect directly with verified real estate professionals across every listing.', 'icon' => 'M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m5-2.13a4 4 0 100-8 4 4 0 000 8zm6 2.13a4 4 0 100-8'],
-                    ['title' => 'Easy Property Search', 'desc' => 'Powerful location, price, and purpose filters help you find exactly what you need.', 'icon' => 'M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z'],
-                    ['title' => 'Secure Inquiry Process', 'desc' => 'Message agents directly through PropNest — your contact details stay protected.', 'icon' => 'M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z'],
-                ] as $benefit)
-                    <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-lg hover:border-primary-200 hover:-translate-y-1 transition-all duration-300">
-                        <div class="w-11 h-11 rounded-xl bg-primary-50 text-primary-700 flex items-center justify-center mb-4">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="{{ $benefit['icon'] }}" />
-                            </svg>
-                        </div>
-                        <div class="font-heading font-700 text-primary-900">{{ $benefit['title'] }}</div>
-                        <p class="text-sm text-gray-600 mt-2 leading-relaxed">{{ $benefit['desc'] }}</p>
-                    </div>
-                @endforeach
-            </div>
-        </section>
-
-        {{-- Featured Agents --}}
-        @if ($featuredAgents->isNotEmpty())
-            <section class="py-12 sm:py-14">
-                <x-section-heading eyebrow="Meet the network" title="Featured Agents" class="mb-8" />
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    @foreach ($featuredAgents as $profile)
-                        <a href="{{ route('agents.show', $profile->user) }}" wire:navigate class="group block bg-white rounded-2xl border border-gray-100 p-6 text-center shadow-sm hover:shadow-lg hover:border-primary-200 hover:-translate-y-1 transition-all duration-300">
-                            <x-user-avatar :user="$profile->user" size="w-14 h-14" textClass="font-heading font-700 text-lg" class="mx-auto ring-4 ring-white shadow-sm" />
-                            <div class="font-heading font-600 text-primary-900 mt-3 group-hover:text-primary-700 transition-colors">{{ $profile->user->name }}</div>
-                            <x-badge variant="primary" class="mt-2">Verified</x-badge>
-                            @if ($profile->agency_name)
-                                <div class="text-sm text-gray-500 mt-2">{{ $profile->agency_name }}</div>
-                            @endif
-                        </a>
-                    @endforeach
-                </div>
-            </section>
-        @endif
-
-        {{-- Testimonials --}}
-        <section class="py-12 sm:py-14">
-            <x-section-heading eyebrow="Client stories" title="What Our Users Say" class="mb-8" />
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                @foreach ([
-                    ['quote' => 'PropNest made finding our first rental so simple — every listing felt trustworthy, and the agent responded within the hour.', 'name' => 'Amara Chen', 'role' => 'Renter'],
-                    ['quote' => 'As an agent, the verification process gave my listings instant credibility. Buyer inquiries come in ready to move forward.', 'name' => 'Daniel Osei', 'role' => 'Verified Agent'],
-                    ['quote' => 'The comparison and saved-search tools helped us narrow down three cities to the one perfect neighborhood.', 'name' => 'Priya Nair', 'role' => 'Buyer'],
-                ] as $testimonial)
-                    <div class="h-full bg-white rounded-2xl border border-gray-100 p-6 flex flex-col shadow-sm hover:shadow-lg hover:border-primary-200 hover:-translate-y-1 transition-all duration-300">
-                        <div class="flex gap-0.5 text-accent-500 mb-3">
-                            @for ($i = 0; $i < 5; $i++)
-                                <x-icon.star class="w-4 h-4 fill-current" />
-                            @endfor
-                        </div>
-                        <p class="text-gray-700 text-sm leading-relaxed flex-1">&ldquo;{{ $testimonial['quote'] }}&rdquo;</p>
-                        <div class="mt-5 pt-4 border-t border-gray-100 flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-primary-100 text-primary-800 font-heading font-700 text-sm flex items-center justify-center shrink-0">
-                                {{ Str::of($testimonial['name'])->explode(' ')->map(fn ($n) => $n[0] ?? '')->take(2)->implode('') }}
-                            </div>
-                            <div>
-                                <div class="font-heading font-600 text-primary-900 text-sm">{{ $testimonial['name'] }}</div>
-                                <div class="text-xs text-gray-500">{{ $testimonial['role'] }}</div>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </section>
-
-        {{-- Latest Listings --}}
-        <section class="py-12 sm:py-14">
-            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-50 via-white to-white border border-primary-100 px-6 py-8 sm:px-10 sm:py-10">
-                <div class="absolute -top-10 -right-10 w-56 h-56 rounded-full bg-accent-400/10"></div>
-
-                <div class="relative flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
-                    <x-section-heading eyebrow="Just Listed" title="Latest Listings" align="left" />
-                    <a href="{{ route('properties.index') }}" wire:navigate class="shrink-0">
-                        <x-button variant="accent" class="w-full sm:w-auto justify-center">
-                            View All Listings
-                            <svg class="w-4 h-4 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                        </x-button>
+            <section class="py-14">
+                <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
+                    <x-section-heading eyebrow="Featured" title="Worth a closer look" subtitle="Homes agents are putting forward this week, picked for light, location and price." align="left" />
+                    <a href="{{ route('properties.index', ['featured' => 1]) }}" wire:navigate class="shrink-0 text-sm font-medium text-primary-900 inline-flex items-center gap-1.5 group">
+                        <span class="link-underline">See all featured homes</span>
+                        <svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
                     </a>
                 </div>
 
-                <div class="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    @forelse ($latestProperties as $property)
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
+                    @foreach ($featuredProperties->take(3) as $property)
                         <x-property-card :property="$property" />
-                    @empty
-                        <div class="col-span-full text-center py-12 bg-white rounded-2xl border border-gray-100">
-                            <p class="text-gray-500">No listings yet — check back soon.</p>
-                        </div>
-                    @endforelse
+                    @endforeach
                 </div>
-            </div>
-        </section>
+            </section>
+        @endif
 
-        {{-- Call to Action --}}
-        <section class="py-12 sm:py-14">
-            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-800 to-primary-900 px-6 py-14 sm:px-14 sm:py-16 text-center">
-                <div class="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-accent-500/10"></div>
-                <div class="absolute -bottom-20 -left-10 w-72 h-72 rounded-full bg-primary-600/20"></div>
-                <div class="relative">
-                    <h2 class="font-heading font-800 text-2xl sm:text-3xl text-white">Ready to find your next home?</h2>
-                    <p class="mt-3 text-primary-200 max-w-xl mx-auto">Create a free account to save favorites, message agents, and get notified the moment a matching listing goes live.</p>
-                    <div class="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3">
-                        <a href="{{ route('register') }}" @click="openAuth('register', $event)">
-                            <x-button variant="accent" class="px-6 py-3">Get Started Free</x-button>
-                        </a>
-                        <a href="{{ route('properties.index') }}" wire:navigate>
-                            <x-button variant="outline-white" class="px-6 py-3">Browse Properties</x-button>
-                        </a>
+        {{-- Cities: a typographic index instead of image tiles --}}
+        @if ($cityCounts->isNotEmpty())
+            <section class="py-14">
+                <div class="grid lg:grid-cols-12 gap-10">
+                    <div class="lg:col-span-4">
+                        <x-section-heading eyebrow="By city" title="Where people are looking" subtitle="Pick a city to see every home listed there, on a map or as a list." align="left" />
                     </div>
+                    <ul class="lg:col-span-8 grid sm:grid-cols-2 gap-x-10 border-t border-gray-900/10">
+                        @foreach ($cityCounts as $city => $total)
+                            <li class="border-b border-gray-900/10">
+                                <a href="{{ route('properties.index', ['location' => $city]) }}" wire:navigate class="group flex items-baseline justify-between gap-4 py-5">
+                                    <span class="display text-3xl group-hover:text-accent-600 transition-colors">{{ $city }}</span>
+                                    <span class="font-mono text-xs text-gray-500 whitespace-nowrap flex items-center gap-2">
+                                        {{ $total }} {{ Str::plural('home', $total) }}
+                                        <svg class="w-3.5 h-3.5 -translate-x-1 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
+                                    </span>
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
                 </div>
+            </section>
+        @endif
+
+        {{-- Property types --}}
+        @if (count($propertyTypes) > 0)
+            <section class="py-6">
+                <div class="flex flex-wrap items-center gap-2">
+                    <span class="kicker mr-2">Browse by type</span>
+                    @foreach ($propertyTypes as $type)
+                        <a href="{{ route('properties.index', ['propertyType' => $type->value]) }}" wire:navigate class="inline-flex items-center gap-2 rounded-full border border-gray-900/15 bg-white px-4 py-2 text-sm text-primary-900 hover:border-primary-900 transition-colors">
+                            {{ Str::headline($type->value) }}
+                            <span class="font-mono text-xs text-gray-500">{{ $propertyTypeCounts[$type->value] ?? 0 }}</span>
+                        </a>
+                    @endforeach
+                </div>
+            </section>
+        @endif
+
+        {{-- Latest --}}
+        <section class="py-14">
+            <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
+                <x-section-heading eyebrow="New on PropNest" title="Fresh on the market" align="left" />
+                <a href="{{ route('properties.index') }}" wire:navigate class="shrink-0 text-sm font-medium text-primary-900 inline-flex items-center gap-1.5 group">
+                    <span class="link-underline">Browse all {{ number_format($propertyCount) }} homes</span>
+                    <svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
+                @forelse ($latestProperties as $property)
+                    <x-property-card :property="$property" />
+                @empty
+                    <div class="col-span-full text-center py-16 border border-dashed border-gray-300 rounded-lg">
+                        <p class="text-gray-500">Nothing listed yet. New homes appear here the moment an agent publishes them.</p>
+                    </div>
+                @endforelse
             </div>
         </section>
 
-        {{-- About Us --}}
-        <section id="about" class="py-12 sm:py-14 scroll-mt-24">
-            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-800 to-primary-900 px-6 py-14 sm:px-14 sm:py-16 text-center">
-                <div class="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-accent-500/10"></div>
-                <div class="absolute -bottom-20 -left-10 w-72 h-72 rounded-full bg-primary-600/20"></div>
-                <div class="relative">
-                    <h2 class="font-heading font-700 text-2xl sm:text-3xl text-white mb-4">About PropNest</h2>
-                    <p class="text-primary-100 max-w-2xl mx-auto leading-relaxed">
-                        PropNest is a real-estate marketplace that connects buyers and renters directly with verified agents.
-                        Search published listings for sale or for rent, filter by location, price, and property type, save
-                        the properties and searches you care about, and message the listing agent straight from the site —
-                        no middlemen, no guesswork. Agents publish and manage their own listings, respond to buyer inquiries,
-                        and build a public profile buyers can trust.
+        {{-- How it works --}}
+        <section id="about" class="py-14 scroll-mt-24">
+            <div class="grid lg:grid-cols-12 gap-10">
+                <div class="lg:col-span-4">
+                    <x-section-heading eyebrow="How it works" title="No middlemen. No guesswork." align="left" />
+                    <p class="mt-4 text-[15px] text-gray-600 leading-relaxed max-w-sm">
+                        PropNest connects people looking for a home directly with the agent who listed it. We check every agent before their first listing goes live.
                     </p>
                 </div>
+                <ol class="lg:col-span-8 grid sm:grid-cols-2 gap-px bg-gray-900/10 border border-gray-900/10 rounded-lg overflow-hidden">
+                    @foreach ([
+                        ['Search the way you think', 'Filter by price, size and type, or draw the exact area you want on the map.'],
+                        ['Shortlist and compare', 'Save homes as you go and put up to three side by side, down to the square foot.'],
+                        ['Talk to the agent', 'Send a message from the listing. Your email and number stay private until you choose to share them.'],
+                        ['Hear about new homes first', 'Save a search and we email you when a new listing matches it.'],
+                    ] as $i => [$title, $desc])
+                        <li class="bg-cream p-6 sm:p-8">
+                            <span class="font-mono text-xs text-accent-600">{{ sprintf('%02d', $i + 1) }}</span>
+                            <h3 class="mt-4 text-lg font-semibold text-primary-900">{{ $title }}</h3>
+                            <p class="mt-2 text-sm text-gray-600 leading-relaxed">{{ $desc }}</p>
+                        </li>
+                    @endforeach
+                </ol>
+            </div>
+        </section>
+
+        {{-- Agents --}}
+        @if ($featuredAgents->isNotEmpty())
+            <section class="py-14">
+                <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
+                    <x-section-heading eyebrow="The people behind the listings" title="Agents you can check" align="left" />
+                    <a href="{{ route('agents.index') }}" wire:navigate class="shrink-0 text-sm font-medium text-primary-900 inline-flex items-center gap-1.5 group">
+                        <span class="link-underline">Meet every agent</span>
+                        <svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
+                    </a>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    @foreach ($featuredAgents as $profile)
+                        <a href="{{ route('agents.show', $profile->user) }}" wire:navigate class="group flex items-center gap-4 rounded-lg bg-white ring-1 ring-gray-900/10 hover:ring-primary-900 p-4 transition">
+                            <x-user-avatar :user="$profile->user" size="w-12 h-12" textClass="font-semibold text-sm" />
+                            <div class="min-w-0">
+                                <div class="font-medium text-primary-900 truncate flex items-center gap-1.5">
+                                    {{ $profile->user->name }}
+                                    <svg class="w-4 h-4 text-accent-600 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-label="Verified"><path fill-rule="evenodd" d="M8.603 3.799A4.49 4.49 0 0 1 12 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 0 1 3.498 1.307 4.491 4.491 0 0 1 1.307 3.497A4.49 4.49 0 0 1 21.75 12a4.49 4.49 0 0 1-1.549 3.397 4.491 4.491 0 0 1-1.307 3.497 4.491 4.491 0 0 1-3.497 1.307A4.49 4.49 0 0 1 12 21.75a4.49 4.49 0 0 1-3.397-1.549 4.49 4.49 0 0 1-3.498-1.306 4.491 4.491 0 0 1-1.307-3.498A4.49 4.49 0 0 1 2.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 0 1 1.307-3.497 4.49 4.49 0 0 1 3.497-1.307Zm7.007 6.387a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd" /></svg>
+                                </div>
+                                <div class="text-sm text-gray-500 truncate">{{ $profile->agency_name ?: 'Independent agent' }}</div>
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
+            </section>
+        @endif
+
+        {{-- House rules: what we actually check, instead of invented testimonials --}}
+        <section class="py-14">
+            <div class="grid lg:grid-cols-12 gap-10 items-start">
+                <div class="lg:col-span-5">
+                    <p class="kicker">House rules</p>
+                    <p class="display text-3xl sm:text-[2.6rem] leading-[1.08] mt-4">
+                        A listing site is only as good as what it <em class="text-accent-600">refuses</em> to show.
+                    </p>
+                </div>
+                <ol class="lg:col-span-7 divide-y divide-gray-900/10 border-y border-gray-900/10">
+                    @php $rules = [
+                        ['title' => 'Every listing is reviewed before it goes live', 'body' => 'A person checks the photos, the price and the details. Listings that do not hold up are sent back to the agent with a reason.'],
+                        ['title' => 'Agents are checked, not just signed up', 'body' => 'Agents send their details for review. Only approved agents get the verified mark next to their name.'],
+                        ['title' => 'Anyone can flag a listing', 'body' => 'If something looks wrong, report it from the listing page. Reports go straight to our moderators.'],
+                    ]; @endphp
+                    @foreach ($rules as $rule)
+                        <li class="grid grid-cols-[2.5rem_1fr] gap-4 py-6">
+                            <span class="font-mono text-xs text-accent-600 pt-1">0{{ $loop->iteration }}</span>
+                            <div>
+                                <h3 class="font-semibold text-primary-900">{{ $rule['title'] }}</h3>
+                                <p class="text-[15px] text-gray-600 mt-1.5 leading-relaxed">{{ $rule['body'] }}</p>
+                            </div>
+                        </li>
+                    @endforeach
+                </ol>
+            </div>
+        </section>
+
+        {{-- For agents --}}
+        <section class="py-14">
+            <div class="relative overflow-hidden rounded-lg bg-primary-900 text-white">
+                <div class="grid lg:grid-cols-12 gap-10 px-6 py-12 sm:px-12 sm:py-16">
+                    <div class="lg:col-span-7">
+                        <p class="kicker !text-gray-400">For agents</p>
+                        <h2 class="display !text-white text-4xl sm:text-6xl mt-4">Selling or letting?<br><em class="text-accent-300">List it here.</em></h2>
+                    </div>
+                    <div class="lg:col-span-5 flex flex-col justify-end">
+                        <p class="text-gray-300 leading-relaxed">Get verified once, then publish as many homes as your plan allows. Buyers reach you directly, and you can feature a listing whenever you need more eyes on it.</p>
+                        <div class="mt-7 flex flex-wrap gap-3">
+                            <a href="{{ route('register') }}" @click="openAuth('register', $event)">
+                                <x-button variant="accent" class="px-5 py-3">Become an agent</x-button>
+                            </a>
+                            <a href="{{ route('properties.index') }}" wire:navigate>
+                                <x-button variant="outline-white" class="px-5 py-3">Browse homes first</x-button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {{-- Large roofline from the logo, as a quiet graphic --}}
+                <svg class="absolute -right-10 -bottom-24 w-[28rem] text-white/[0.04] pointer-events-none hidden lg:block" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+                    <path d="M7 17.5 16 9l9 8.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M11.5 23 16 18.75 20.5 23" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
             </div>
         </section>
 
         {{-- FAQ --}}
-        <section class="py-12 sm:py-14" x-data="{ open: null }">
-            <x-section-heading eyebrow="Support" title="Frequently Asked Questions" class="mb-8" />
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 max-w-5xl mx-auto">
-                @foreach ([
-                    ['q' => 'How do I search for a property?', 'a' => 'Use the search bar above to enter a city, neighborhood, or keyword, choose For Sale or For Rent, and browse the matching listings.'],
-                    ['q' => 'How do I contact an agent?', 'a' => 'Open any listing or agent profile and use the inquiry form to send a message — the agent is notified directly.'],
-                    ['q' => 'How do I list a property?', 'a' => 'Register as an Agent, then create a listing from your dashboard. New listings start as a draft until you publish them.'],
-                    ['q' => 'What is the difference between For Sale and For Rent?', 'a' => 'For Sale listings are properties available to purchase; For Rent listings are available to lease. Use the search toggle to filter by either.'],
-                    ['q' => 'How do I save a property?', 'a' => 'Create a free buyer account, then use the heart icon on any listing to add it to your favorites.'],
-                    ['q' => 'How do I save a search?', 'a' => 'As a signed-in buyer, run a search on the Browse Listings page and click "Save this search" to get notified when new matches are published.'],
-                ] as $index => $faq)
-                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm hover:border-primary-200 hover:shadow-md transition-all duration-300 self-start">
-                        <button type="button" class="w-full flex items-center justify-between gap-4 text-left font-heading font-600 text-primary-900 px-5 py-4" @click="open = open === {{ $index }} ? null : {{ $index }}">
-                            <span>{{ $faq['q'] }}</span>
-                            <svg class="w-5 h-5 shrink-0 text-primary-500 transition-transform duration-300" :class="{ 'rotate-180': open === {{ $index }} }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-                        <p x-show="open === {{ $index }}" x-cloak class="text-sm text-gray-600 px-5 pb-4">{{ $faq['a'] }}</p>
-                    </div>
-                @endforeach
+        <section class="py-14" x-data="{ open: 0 }">
+            <div class="grid lg:grid-cols-12 gap-10">
+                <div class="lg:col-span-4">
+                    <x-section-heading eyebrow="Questions" title="Good to know" align="left" />
+                </div>
+                <div class="lg:col-span-8 border-t border-gray-900/10">
+                    @foreach ([
+                        ['q' => 'Is PropNest free for buyers and renters?', 'a' => 'Yes. Searching, saving homes, comparing them and messaging agents costs nothing. Agents pay for their plan and for featured placement.'],
+                        ['q' => 'How do you verify agents?', 'a' => 'Agents submit their licence and agency details. Our team checks them before the agent can publish, and reported listings are reviewed by hand.'],
+                        ['q' => 'How do I contact an agent?', 'a' => 'Open a listing or an agent profile and send a message. The agent gets it by email and in their inbox on PropNest.'],
+                        ['q' => 'Can I get alerts for new homes?', 'a' => 'Sign in, run a search with the filters you want, and choose "Save this search". We email you when a new listing matches.'],
+                        ['q' => 'How do I list a property?', 'a' => 'Create an agent account, finish your profile and pick a plan. New listings start as drafts and go live once you publish them.'],
+                    ] as $index => $faq)
+                        <div class="border-b border-gray-900/10">
+                            <button type="button" class="w-full flex items-center justify-between gap-6 text-left py-5 text-[17px] font-medium text-primary-900" @click="open = open === {{ $index }} ? null : {{ $index }}" :aria-expanded="open === {{ $index }}">
+                                <span>{{ $faq['q'] }}</span>
+                                <span class="relative w-4 h-4 shrink-0 text-gray-500" aria-hidden="true">
+                                    <span class="absolute inset-x-0 top-1/2 h-px bg-current"></span>
+                                    <span class="absolute inset-y-0 left-1/2 w-px bg-current transition-transform duration-200" :class="{ 'scale-y-0': open === {{ $index }} }"></span>
+                                </span>
+                            </button>
+                            <p x-show="open === {{ $index }}" x-collapse x-cloak class="text-[15px] text-gray-600 leading-relaxed pb-6 pr-10 max-w-2xl">{{ $faq['a'] }}</p>
+                        </div>
+                    @endforeach
+                </div>
             </div>
         </section>
 
         {{-- Contact --}}
-        <section id="contact" class="py-12 sm:py-14 scroll-mt-24">
-            <div class="bg-white rounded-2xl border border-gray-100 p-6 sm:p-10 grid grid-cols-1 lg:grid-cols-5 gap-10">
-                <div class="lg:col-span-2">
-                    <h2 class="font-heading font-700 text-2xl sm:text-3xl text-primary-900 mb-2">Contact Us</h2>
-                    <p class="text-gray-600">Questions about PropNest? Send us a message using the form and we'll get back to you as soon as we can.</p>
-
-                    <div class="mt-6 space-y-4 text-sm text-gray-600">
-                        <div class="flex items-center gap-3">
-                            <span class="w-11 h-11 rounded-xl bg-primary-50 text-primary-700 flex items-center justify-center shrink-0">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-                                </svg>
-                            </span>
-                            Your details stay private — only our team sees your message.
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <span class="w-11 h-11 rounded-xl bg-primary-50 text-primary-700 flex items-center justify-center shrink-0">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                            </span>
-                            We typically reply within one business day.
-                        </div>
-                    </div>
+        <section id="contact" class="py-14 scroll-mt-24">
+            <div class="grid lg:grid-cols-12 gap-10">
+                <div class="lg:col-span-4">
+                    <x-section-heading eyebrow="Contact" title="Talk to a person" align="left" />
+                    <p class="mt-4 text-[15px] text-gray-600 leading-relaxed max-w-sm">A question about a listing, an agent or your account? Write to us. Someone from the team replies within one working day.</p>
+                    <p class="mt-6 text-sm text-gray-500 flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
+                        Only our team sees what you send.
+                    </p>
                 </div>
-
-                <div class="lg:col-span-3">
+                <div class="lg:col-span-8 bg-white rounded-lg ring-1 ring-gray-900/10 p-6 sm:p-8">
                     <livewire:public.contact-form />
                 </div>
             </div>

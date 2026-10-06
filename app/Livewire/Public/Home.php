@@ -56,6 +56,7 @@ class Home extends Component
             'propertyTypeCounts' => $propertyTypeCounts,
             'cityCounts' => $cityCounts,
             'propertyCount' => (clone $publishedBase)->count(),
+            'cityCount' => (clone $publishedBase)->distinct()->count('city'),
             'agentCount' => AgentProfile::query()->where('verification_status', AgentVerificationStatus::Verified)->count(),
             'featuredAgents' => AgentProfile::query()
                 ->with('user')

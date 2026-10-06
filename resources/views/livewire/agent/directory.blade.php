@@ -1,20 +1,10 @@
 <div>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <nav class="flex items-center gap-1.5 text-sm text-gray-500 mb-2">
-            <a href="{{ route('home') }}" wire:navigate class="hover:text-primary-600">Home</a>
-            <svg class="w-3.5 h-3.5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-            <span class="text-gray-700 font-medium">Find an Agent</span>
-        </nav>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+        <x-page-header kicker="Agents" title="People who know the street">
+            <x-slot:description>{{ $agents->total() }} {{ \Illuminate\Support\Str::plural('agent', $agents->total()) }}. Each one checked by our team before their first listing goes live.</x-slot:description>
+        </x-page-header>
 
-        <div class="flex items-end justify-between gap-4 flex-wrap mb-6">
-            <div>
-                <p class="font-heading font-700 text-accent-600 text-xs uppercase tracking-[0.15em] mb-1">Our Network</p>
-                <h1 class="font-heading font-800 text-2xl sm:text-3xl text-gray-900">Find an Agent</h1>
-                <p class="text-gray-500 mt-1">{{ $agents->total() }} {{ \Illuminate\Support\Str::plural('agent', $agents->total()) }} ready to help you buy, sell, or rent</p>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-5 mb-8">
+        <div class="bg-white rounded-xl border border-gray-900/10 p-4 sm:p-5 mb-8">
             <x-input-label for="keyword" value="Search by name or agency" class="mb-1.5" />
             <div class="relative max-w-md">
                 <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

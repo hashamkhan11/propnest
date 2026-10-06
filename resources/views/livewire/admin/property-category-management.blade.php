@@ -1,5 +1,6 @@
-<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="max-w-5xl px-4 sm:px-6 lg:px-8 py-10">
     <x-admin.page-header
+        kicker="Listings"
         title="Categories"
         icon="tag"
         :subtitle="$categories->count() . ' property ' . \Illuminate\Support\Str::plural('type', $categories->count())"
@@ -12,7 +13,7 @@
                 <x-input-error :messages="$errors->get('name')" class="mt-2" />
             </div>
             <div class="flex gap-2">
-                <x-button type="submit">{{ $editingId ? 'Update' : 'Add Category' }}</x-button>
+                <x-button type="submit">{{ $editingId ? 'Save' : 'Add type' }}</x-button>
                 @if ($editingId)
                     <x-button type="button" variant="secondary" wire:click="startCreate">Cancel</x-button>
                 @endif
@@ -45,7 +46,7 @@
                                 {{ $category->is_active ? 'Deactivate' : 'Activate' }}
                             </x-button>
                             <x-button
-                                variant="secondary"
+                                variant="ghost-danger"
                                 x-on:click="$store.confirmDialog.open({
                                     title: 'Delete this category?',
                                     message: 'This permanently deletes {{ addslashes($category->name) }}.',
@@ -65,10 +66,10 @@
         {{-- Mobile card list --}}
         <div class="md:hidden space-y-3">
             @foreach ($categories as $category)
-                <div wire:key="category-card-{{ $category->id }}" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
+                <div wire:key="category-card-{{ $category->id }}" class="bg-white rounded-xl border border-gray-900/10 p-4">
                     <div class="flex items-start justify-between gap-2">
                         <div class="min-w-0">
-                            <p class="font-heading font-700 text-gray-900">{{ $category->name }}</p>
+                            <p class="font-semibold text-gray-900">{{ $category->name }}</p>
                             <p class="text-sm text-gray-500">{{ $category->slug }} &middot; {{ $category->properties_count }} listings</p>
                         </div>
                         <x-badge :variant="$category->is_active ? 'success' : 'gray'" class="shrink-0">
@@ -76,13 +77,13 @@
                         </x-badge>
                     </div>
 
-                    <div class="mt-4 pt-3 border-t border-gray-100 flex gap-2 flex-wrap">
+                    <div class="mt-4 pt-3 border-t border-gray-900/10 flex gap-2 flex-wrap">
                         <x-button variant="secondary" wire:click="startEdit({{ $category->id }})" class="flex-1 justify-center">Rename</x-button>
                         <x-button variant="secondary" wire:click="toggleActive({{ $category->id }})" class="flex-1 justify-center">
                             {{ $category->is_active ? 'Deactivate' : 'Activate' }}
                         </x-button>
                         <x-button
-                            variant="secondary"
+                            variant="ghost-danger"
                             class="w-full justify-center"
                             x-on:click="$store.confirmDialog.open({
                                 title: 'Delete this category?',

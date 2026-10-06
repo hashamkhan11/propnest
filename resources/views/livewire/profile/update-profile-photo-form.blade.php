@@ -52,27 +52,22 @@ new class extends Component
     }
 }; ?>
 
-<section>
-    <header>
-        <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Profile Photo') }}
-        </h2>
-
-        <p class="mt-1 text-sm text-gray-600">
-            {{ __('Upload a photo to personalize your account. JPG, PNG or WEBP, up to 2MB.') }}
-        </p>
+<section class="grid md:grid-cols-12 gap-x-10 gap-y-5">
+    <header class="md:col-span-4">
+        <h2 class="text-[15px] font-semibold text-primary-900">Photo</h2>
+        <p class="mt-1 text-sm text-gray-500 leading-relaxed">Shown on your inquiries and, for agents, on every listing. JPG, PNG or WEBP up to 2 MB.</p>
     </header>
 
-    <div class="mt-6 flex items-center gap-6">
+    <div class="md:col-span-8 flex items-center gap-6">
         <div class="relative shrink-0 w-20 h-20">
             @if ($photo)
-                <img src="{{ $photo->temporaryUrl() }}" class="w-20 h-20 rounded-full object-cover ring-4 ring-white shadow-sm">
+                <img src="{{ $photo->temporaryUrl() }}" class="w-20 h-20 rounded-full object-cover ring-4 ring-white">
             @else
-                <x-user-avatar :user="Auth::user()" size="w-20 h-20" textClass="font-heading font-700 text-2xl" class="ring-4 ring-white shadow-sm" />
+                <x-user-avatar :user="Auth::user()" size="w-20 h-20" textClass="font-semibold text-2xl" class="ring-4 ring-white" />
             @endif
 
             <div wire:loading wire:target="photo" class="absolute inset-0 rounded-full bg-white/70 flex items-center justify-center">
-                <svg class="animate-spin h-5 w-5 text-primary-600" fill="none" viewBox="0 0 24 24">
+                <svg class="animate-spin h-5 w-5 text-primary-900" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
                 </svg>
@@ -84,7 +79,7 @@ new class extends Component
 
             <div class="flex items-center gap-3">
                 <x-secondary-button type="button" onclick="document.getElementById('photo').click()">
-                    {{ Auth::user()->profile_photo_path ? __('Change Photo') : __('Upload Photo') }}
+                    {{ Auth::user()->profile_photo_path ? __('Change photo') : __('Upload a photo') }}
                 </x-secondary-button>
 
                 @if (Auth::user()->profile_photo_path)

@@ -1,79 +1,60 @@
 <div>
     @if (auth()->user()?->role === \App\Enums\User\UserRole::Buyer)
-        <x-card>
-            <div class="flex items-center gap-3 mb-4">
-                <div class="w-10 h-10 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center shrink-0">
-                    <x-icon.mail class="w-5 h-5" />
-                </div>
-                <div>
-                    <h3 class="font-heading font-700 text-lg text-gray-900 leading-tight">Contact Agent</h3>
-                    <p class="text-xs text-gray-500">Usually responds within a day</p>
-                </div>
-            </div>
-
+        <div class="rounded-xl border border-gray-900/10 bg-white p-5">
             @if ($justSent)
-                <div class="animate-fade-in-up text-center py-4">
-                    <div class="w-14 h-14 mx-auto rounded-full bg-primary-50 text-primary-600 flex items-center justify-center mb-3">
-                        <x-icon.check-circle class="w-7 h-7" />
+                <div class="py-2">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center mb-4">
+                        <x-icon.check-circle class="w-5 h-5" />
                     </div>
-                    <p class="font-heading font-700 text-gray-900">Message sent!</p>
-                    <p class="text-sm text-gray-500 mt-1">The agent has been notified and will get back to you soon.</p>
-                    <button
-                        type="button"
-                        wire:click="sendAnother"
-                        class="mt-4 text-sm font-semibold text-primary-600 hover:text-primary-700"
-                    >
-                        Send another message
+                    <p class="font-semibold text-primary-900">Sent. The agent has your message.</p>
+                    <p class="text-sm text-gray-500 mt-1">You will get their reply by email, and it will show up in your dashboard.</p>
+                    <button type="button" wire:click="sendAnother" class="mt-4 text-sm text-primary-900 font-medium link-underline">
+                        Write another message
                     </button>
                 </div>
             @else
-                <form wire:submit="send" class="space-y-4">
+                <h3 class="font-semibold text-primary-900">Ask about this home</h3>
+                <p class="text-sm text-gray-500 mt-1 mb-4">Goes straight to the agent. Most reply within a day.</p>
+
+                <form wire:submit="send" class="space-y-3">
                     <div x-data="{ count: {{ strlen($message) }} }">
-                        <div class="flex items-center justify-between mb-1">
-                            <x-input-label for="message" value="Your message" />
-                            <span class="text-xs text-gray-400" x-text="count + ' / 2000'"></span>
-                        </div>
+                        <label for="message" class="sr-only">Your message</label>
                         <textarea
                             wire:model="message"
                             id="message"
-                            rows="4"
+                            rows="5"
                             maxlength="2000"
                             x-on:input="count = $el.value.length"
-                            class="border-gray-300 focus:border-primary-600 focus:ring-primary-600 rounded-xl shadow-sm w-full text-sm transition-colors resize-none disabled:bg-gray-50 disabled:text-gray-400"
-                            placeholder="I'm interested in this property. Could you share more details or arrange a viewing?"
+                            class="border-gray-300 hover:border-gray-400 focus:border-primary-900 focus:ring-1 focus:ring-primary-900 rounded-md w-full text-sm leading-relaxed resize-none disabled:bg-gray-50 disabled:text-gray-400"
+                            placeholder="Hi, is this still available? I'd like to arrange a viewing this week."
                             wire:loading.attr="disabled"
                             wire:target="send"
                         ></textarea>
-                        <x-input-error :messages="$errors->get('message')" class="mt-2" />
+                        <div class="flex justify-between mt-1">
+                            <x-input-error :messages="$errors->get('message')" />
+                            <span class="font-mono text-[11px] text-gray-400 ml-auto" x-text="count + ' / 2000'"></span>
+                        </div>
                     </div>
 
-                    <x-button type="submit" class="w-full justify-center" wire:loading.attr="disabled" wire:target="send">
-                        <span wire:loading.remove wire:target="send" class="inline-flex items-center gap-2">
-                            <x-icon.mail class="w-4 h-4" />
-                            Send Inquiry
-                        </span>
+                    <x-button type="submit" variant="accent" class="w-full" wire:loading.attr="disabled" wire:target="send">
+                        <span wire:loading.remove wire:target="send">Send message</span>
                         <span wire:loading wire:target="send" class="inline-flex items-center gap-2">
                             <svg class="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/></svg>
                             Sending&hellip;
                         </span>
                     </x-button>
 
-                    <p class="text-xs text-gray-400 text-center">Your contact details will be shared with the agent so they can reply.</p>
+                    <p class="text-xs text-gray-500">The agent will see your name and email so they can reply.</p>
                 </form>
             @endif
-        </x-card>
+        </div>
     @elseif (! auth()->check())
-        <x-card>
-            <div class="flex items-center gap-3 mb-3">
-                <div class="w-10 h-10 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center shrink-0">
-                    <x-icon.mail class="w-5 h-5" />
-                </div>
-                <h3 class="font-heading font-700 text-lg text-gray-900">Contact Agent</h3>
-            </div>
-            <p class="text-gray-600 text-sm">
-                <a href="{{ route('login') }}" wire:navigate class="text-primary-700 font-semibold hover:underline">Log in</a>
-                as a buyer to send this agent a message about this property.
-            </p>
-        </x-card>
+        <div class="rounded-xl bg-primary-900 text-gray-300 p-5">
+            <h3 class="font-semibold text-white">Ask about this home</h3>
+            <p class="text-sm mt-1 mb-4">Sign in to message the agent directly. Free, and no spam.</p>
+            <a href="{{ route('login') }}" @click="openAuth('login', $event)">
+                <x-button variant="accent" class="w-full">Sign in to message</x-button>
+            </a>
+        </div>
     @endif
 </div>

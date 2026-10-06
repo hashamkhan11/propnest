@@ -22,7 +22,7 @@
 
         <div>
             <x-input-label for="contact-message" value="Message" />
-            <textarea wire:model="message" id="contact-message" rows="5" class="border-gray-300 focus:border-primary-600 focus:ring-primary-600 rounded-md shadow-sm w-full transition-colors duration-150"></textarea>
+            <textarea wire:model="message" id="contact-message" rows="5" class="border-gray-300 focus:border-primary-900 focus:ring-primary-900 rounded-md w-full transition-colors duration-150"></textarea>
             <x-input-error :messages="$errors->get('message')" class="mt-2" />
         </div>
 

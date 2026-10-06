@@ -1,8 +1,9 @@
-<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="max-w-3xl px-4 sm:px-6 lg:px-8 py-10">
     <x-admin.page-header
-        title="Create Admin"
+        kicker="People"
+        title="Add an admin"
         icon="user-plus"
-        subtitle="Grant admin access to a new team member"
+        subtitle="Admins can review listings, verify agents and issue refunds. Only add people you trust with that."
     />
 
     <x-card class="max-w-xl">
@@ -26,13 +27,13 @@
             </div>
 
             <div>
-                <x-input-label for="password_confirmation" value="Confirm Password" />
+                <x-input-label for="password_confirmation" value="Confirm password" />
                 <x-input wire:model="password_confirmation" id="password_confirmation" type="password" />
             </div>
 
             <div class="flex items-center gap-4 pt-2">
                 <x-button type="submit">
-                    <span wire:loading.remove wire:target="save">Create Admin</span>
+                    <span wire:loading.remove wire:target="save">Create admin</span>
                     <span wire:loading wire:target="save" class="inline-flex items-center gap-1.5">
                         <svg class="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -43,7 +44,7 @@
                 </x-button>
 
                 @if (session('success'))
-                    <p class="text-sm text-primary-700 font-medium">{{ session('success') }}</p>
+                    <p class="text-sm text-primary-900 font-medium">{{ session('success') }}</p>
                 @endif
             </div>
         </form>

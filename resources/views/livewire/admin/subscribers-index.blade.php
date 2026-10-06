@@ -1,8 +1,9 @@
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
     <x-admin.page-header
+        kicker="Audience"
         title="Subscribers"
         icon="megaphone"
-        :subtitle="$subscribers->total() . ' total ' . \Illuminate\Support\Str::plural('subscriber', $subscribers->total())"
+        :subtitle="$subscribers->total() . ' ' . \Illuminate\Support\Str::plural('subscriber', $subscribers->total())"
     />
 
     @if ($subscribers->isEmpty())
@@ -27,9 +28,9 @@
         {{-- Mobile card list --}}
         <div class="md:hidden space-y-3">
             @foreach ($subscribers as $subscriber)
-                <div wire:key="subscriber-card-{{ $subscriber->id }}" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex items-center justify-between gap-3">
+                <div wire:key="subscriber-card-{{ $subscriber->id }}" class="bg-white rounded-xl border border-gray-900/10 p-4 flex items-center justify-between gap-3">
                     <div class="min-w-0">
-                        <p class="font-heading font-700 text-gray-900 truncate">{{ $subscriber->email }}</p>
+                        <p class="font-semibold text-gray-900 truncate">{{ $subscriber->email }}</p>
                         <p class="text-sm text-gray-500">Subscribed {{ $subscriber->created_at->format('M j, Y') }}</p>
                     </div>
                     <x-badge :variant="$subscriber->status->badgeVariant()" class="shrink-0">{{ $subscriber->status->label() }}</x-badge>

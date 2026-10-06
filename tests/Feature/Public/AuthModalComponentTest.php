@@ -12,7 +12,7 @@ class AuthModalComponentTest extends TestCase
         $html = Blade::render('<x-auth-modal :initial-view="$view" :reset-token="$token" />', ['view' => null, 'token' => null]);
 
         $this->assertStringContainsString('Welcome back', $html);
-        $this->assertStringContainsString('Create your account', $html);
+        $this->assertStringContainsString('Make yourself at home.', $html);
         $this->assertStringContainsString('Forgot your password?', $html);
     }
 
@@ -20,14 +20,14 @@ class AuthModalComponentTest extends TestCase
     {
         $html = Blade::render('<x-auth-modal :initial-view="$view" :reset-token="$token" />', ['view' => null, 'token' => null]);
 
-        $this->assertStringNotContainsString('Reset your password', $html);
+        $this->assertStringNotContainsString('Set a new password', $html);
     }
 
     public function test_modal_renders_reset_password_when_a_token_is_given(): void
     {
         $html = Blade::render('<x-auth-modal :initial-view="$view" :reset-token="$token" />', ['view' => 'reset-password', 'token' => 'sample-token-123']);
 
-        $this->assertStringContainsString('Reset your password', $html);
+        $this->assertStringContainsString('Set a new password', $html);
     }
 
     public function test_modal_defaults_to_closed_with_no_initial_view(): void

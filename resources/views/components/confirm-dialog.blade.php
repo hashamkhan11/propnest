@@ -23,7 +23,7 @@
         x-transition:leave="ease-in duration-150"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
-        class="fixed inset-0 bg-primary-950/60 backdrop-blur-sm"
+        class="fixed inset-0 bg-primary-900/40 backdrop-blur-[2px]"
         x-on:click="$store.confirmDialog.close()"
     ></div>
 
@@ -36,13 +36,13 @@
             x-transition:leave="ease-in duration-150"
             x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
             x-transition:leave-end="opacity-0 translate-y-4 sm:scale-95"
-            class="relative w-full max-w-sm bg-white rounded-2xl shadow-2xl shadow-primary-900/20 ring-1 ring-black/5 p-6"
+            class="relative w-full max-w-sm bg-white rounded-xl shadow-2xl ring-1 ring-gray-900/10 p-6"
             @click.outside="$store.confirmDialog.close()"
         >
             <div class="flex items-start gap-4">
                 <span
-                    class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
-                    :class="$store.confirmDialog.variant === 'danger' ? 'bg-red-100 text-red-600' : 'bg-primary-100 text-primary-700'"
+                    class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
+                    :class="$store.confirmDialog.variant === 'danger' ? 'bg-red-50 text-red-700' : 'bg-cream text-primary-900'"
                 >
                     <svg x-show="$store.confirmDialog.variant === 'danger'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
@@ -53,7 +53,7 @@
                 </span>
 
                 <div class="flex-1 pt-1">
-                    <h3 class="font-heading font-700 text-lg text-gray-900" x-text="$store.confirmDialog.title"></h3>
+                    <h3 class="font-semibold text-base text-primary-900" x-text="$store.confirmDialog.title"></h3>
                     <p class="mt-1.5 text-sm text-gray-500" x-text="$store.confirmDialog.message"></p>
                 </div>
             </div>
@@ -62,15 +62,15 @@
                 <button
                     type="button"
                     @click="$store.confirmDialog.close()"
-                    class="inline-flex items-center px-4 py-2 rounded-md border border-gray-300 bg-white text-sm font-semibold text-gray-700 hover:bg-gray-50 transition"
+                    class="inline-flex items-center px-4 py-2.5 rounded-md border border-gray-300 bg-white text-sm font-medium leading-none text-primary-900 hover:bg-gray-50 transition-colors"
                 >
                     <span x-text="$store.confirmDialog.cancelText"></span>
                 </button>
                 <button
                     type="button"
                     @click="$store.confirmDialog.confirm()"
-                    class="inline-flex items-center px-4 py-2 rounded-md text-sm font-semibold text-white transition active:scale-[0.98]"
-                    :class="$store.confirmDialog.variant === 'danger' ? 'bg-red-600 hover:bg-red-700' : 'bg-primary-600 hover:bg-primary-700'"
+                    class="inline-flex items-center px-4 py-2.5 rounded-md text-sm font-medium leading-none text-white transition-colors active:translate-y-px"
+                    :class="$store.confirmDialog.variant === 'danger' ? 'bg-red-700 hover:bg-red-800' : 'bg-primary-900 hover:bg-primary-800'"
                 >
                     <span x-text="$store.confirmDialog.confirmText"></span>
                 </button>

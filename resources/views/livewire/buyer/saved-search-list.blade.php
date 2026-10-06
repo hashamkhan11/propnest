@@ -1,27 +1,19 @@
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="flex items-center gap-3 mb-6">
-        <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center shrink-0">
-            <x-icon.house-search class="w-6 h-6" />
-        </div>
-        <div>
-            <h1 class="font-heading font-800 text-2xl sm:text-3xl text-gray-900">Saved Searches</h1>
-            <p class="text-gray-500 mt-0.5">
-                {{ $savedSearches->count() }} saved {{ \Illuminate\Support\Str::plural('search', $savedSearches->count()) }} &middot; get notified the moment a new listing matches your criteria.
-            </p>
-        </div>
-    </div>
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+    <x-page-header kicker="Saved searches" title="Searches on watch">
+        <x-slot:description>{{ $savedSearches->count() }} saved {{ \Illuminate\Support\Str::plural('search', $savedSearches->count()) }}. Turn on alerts and we email you when a new home matches.</x-slot:description>
+    </x-page-header>
 
     <div class="space-y-4">
         @forelse ($savedSearches as $index => $savedSearch)
             <div
-                class="animate-fade-in-up bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-primary-100 transition-all p-4 sm:p-5"
+                class="animate-fade-in-up bg-white rounded-xl border border-gray-900/10 hover:border-gray-900/25 transition-all p-4 sm:p-5"
                 style="animation-delay: {{ min($index, 8) * 40 }}ms"
                 wire:loading.class="opacity-40 pointer-events-none"
                 wire:target="delete({{ $savedSearch->id }})"
             >
                 <div class="flex flex-col sm:flex-row sm:items-center gap-4">
                     <div class="flex items-center gap-3 flex-1 min-w-0">
-                        <div class="hidden sm:flex w-10 h-10 rounded-lg bg-primary-50 text-primary-600 items-center justify-center shrink-0">
+                        <div class="hidden sm:flex w-10 h-10 rounded-lg bg-primary-50 text-primary-900 items-center justify-center shrink-0">
                             <x-icon.house-search class="w-5 h-5" />
                         </div>
                         <div class="min-w-0">

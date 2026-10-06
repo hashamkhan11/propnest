@@ -20,24 +20,24 @@
                 x-transition:leave-start="opacity-100"
                 x-transition:leave-end="opacity-0"
                 data-toast-type="{{ $toast['type'] }}"
-                class="w-full sm:w-96 bg-white rounded-lg shadow-lg border-l-4 {{ $toast['type'] === 'success' ? 'border-primary-600' : 'border-red-500' }} overflow-hidden"
+                class="w-full sm:w-96 bg-primary-900 text-white rounded-lg shadow-xl overflow-hidden"
             >
                 <div class="flex items-start gap-3 px-4 py-3">
-                    <span class="flex-shrink-0 mt-0.5 {{ $toast['type'] === 'success' ? 'text-primary-600' : 'text-red-500' }}">
+                    <span class="flex-shrink-0 mt-0.5 {{ $toast['type'] === 'success' ? 'text-emerald-400' : 'text-red-400' }}">
                         @if ($toast['type'] === 'success')
                             <x-icon.check-circle class="w-5 h-5" />
                         @else
                             <x-icon.alert-circle class="w-5 h-5" />
                         @endif
                     </span>
-                    <p class="flex-1 text-sm text-gray-700">{{ $toast['message'] }}</p>
-                    <button @click="show = false" type="button" class="flex-shrink-0 text-gray-400 hover:text-gray-600">
+                    <p class="flex-1 text-sm text-gray-100">{{ $toast['message'] }}</p>
+                    <button @click="show = false" type="button" class="flex-shrink-0 text-gray-500 hover:text-white">
                         <span class="sr-only">Dismiss</span>
                         &times;
                     </button>
                 </div>
                 <div
-                    class="h-0.5 {{ $toast['type'] === 'success' ? 'bg-primary-600' : 'bg-red-500' }}"
+                    class="h-0.5 {{ $toast['type'] === 'success' ? 'bg-accent-500' : 'bg-red-500' }}"
                     x-data="{ collapse: false }"
                     x-init="setTimeout(() => collapse = true, 10)"
                     :style="collapse ? 'width: 0%; transition: width 5000ms linear;' : 'width: 100%;'"

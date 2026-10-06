@@ -1,35 +1,36 @@
 @props(['name', 'value' => null])
 
-<div {{ $attributes->merge(['class' => 'grid grid-cols-2 gap-2.5 sm:gap-3']) }}>
-    <label class="group relative flex flex-col items-center gap-1.5 rounded-lg border-2 px-3 py-4 cursor-pointer transition-all duration-150 {{ $value === 'buyer' ? 'border-primary-600 bg-primary-50 shadow-sm shadow-primary-900/5' : 'border-gray-200 bg-white hover:border-primary-300 hover:shadow-sm hover:-translate-y-0.5' }}">
-        <input type="radio" name="{{ $name }}" value="buyer" wire:model.live="{{ $name }}" class="sr-only">
+@php
+    $roles = [
+        'buyer' => ['label' => 'Find a home', 'hint' => 'Save homes and message agents', 'icon' => 'house-search'],
+        'agent' => ['label' => 'List homes', 'hint' => 'Publish and manage listings', 'icon' => 'house-key'],
+    ];
+@endphp
 
-        @if ($value === 'buyer')
-            <span class="absolute top-2 right-2 flex items-center justify-center w-4 h-4 rounded-full bg-primary-600 text-white">
-                <svg class="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+<div {{ $attributes->merge(['class' => 'grid grid-cols-2 gap-2.5']) }}>
+    @foreach ($roles as $role => $meta)
+        @php $selected = $value === $role; @endphp
+        <label @class([
+            'relative flex flex-col gap-2 rounded-lg border px-3.5 py-3 cursor-pointer transition-colors',
+            'border-primary-900 bg-cream ring-1 ring-primary-900' => $selected,
+            'border-gray-300 bg-white hover:border-gray-400' => ! $selected,
+        ])>
+            <input type="radio" name="{{ $name }}" value="{{ $role }}" wire:model.live="{{ $name }}" class="sr-only">
+
+            <span class="flex items-center justify-between">
+                <x-dynamic-component :component="'icon.' . $meta['icon']" @class(['w-4 h-4', 'text-accent-600' => $selected, 'text-gray-400' => ! $selected]) />
+                <span @class([
+                    'w-3.5 h-3.5 rounded-full border flex items-center justify-center',
+                    'border-primary-900' => $selected,
+                    'border-gray-300' => ! $selected,
+                ])>
+                    @if ($selected)<span class="w-1.5 h-1.5 rounded-full bg-primary-900"></span>@endif
+                </span>
             </span>
-        @endif
-
-        <span class="flex items-center justify-center w-9 h-9 rounded-full transition-colors {{ $value === 'buyer' ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-400 group-hover:bg-primary-100 group-hover:text-primary-500' }}">
-            <x-icon.house-search class="w-4 h-4" />
-        </span>
-        <span class="font-heading font-semibold text-xs {{ $value === 'buyer' ? 'text-primary-800' : 'text-gray-700' }}">Buyer</span>
-        <span class="text-[11px] text-gray-500 text-center leading-snug">Browse and save listings</span>
-    </label>
-
-    <label class="group relative flex flex-col items-center gap-1.5 rounded-lg border-2 px-3 py-4 cursor-pointer transition-all duration-150 {{ $value === 'agent' ? 'border-primary-600 bg-primary-50 shadow-sm shadow-primary-900/5' : 'border-gray-200 bg-white hover:border-primary-300 hover:shadow-sm hover:-translate-y-0.5' }}">
-        <input type="radio" name="{{ $name }}" value="agent" wire:model.live="{{ $name }}" class="sr-only">
-
-        @if ($value === 'agent')
-            <span class="absolute top-2 right-2 flex items-center justify-center w-4 h-4 rounded-full bg-primary-600 text-white">
-                <svg class="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+            <span>
+                <span class="block text-sm font-medium text-primary-900">{{ $meta['label'] }}</span>
+                <span class="block text-xs text-gray-500 mt-0.5 leading-snug">{{ $meta['hint'] }}</span>
             </span>
-        @endif
-
-        <span class="flex items-center justify-center w-9 h-9 rounded-full transition-colors {{ $value === 'agent' ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-400 group-hover:bg-primary-100 group-hover:text-primary-500' }}">
-            <x-icon.house-key class="w-4 h-4" />
-        </span>
-        <span class="font-heading font-semibold text-xs {{ $value === 'agent' ? 'text-primary-800' : 'text-gray-700' }}">Agent</span>
-        <span class="text-[11px] text-gray-500 text-center leading-snug">List and manage properties</span>
-    </label>
+        </label>
+    @endforeach
 </div>

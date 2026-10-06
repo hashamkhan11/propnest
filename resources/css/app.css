@@ -7,6 +7,56 @@
     display: none !important;
 }
 
+@layer base {
+    body {
+        font-feature-settings: 'ss01', 'cv11';
+    }
+
+    h1, h2, h3, h4 {
+        letter-spacing: -0.015em;
+    }
+
+    ::selection {
+        background: theme('colors.accent.200');
+        color: theme('colors.primary.900');
+    }
+
+    :focus-visible {
+        outline-color: theme('colors.accent.500');
+    }
+}
+
+@layer components {
+    /* Small label set in mono caps, used above headings and in data tables. */
+    .kicker {
+        @apply font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-gray-500;
+    }
+
+    /* Large editorial headline. */
+    .display {
+        @apply font-display font-normal tracking-tight leading-[0.95] text-primary-900;
+    }
+
+    /* Prices and other figures line up in columns. */
+    .figure {
+        font-variant-numeric: tabular-nums;
+        letter-spacing: -0.01em;
+    }
+
+    /* Underline that grows on hover, for text links. */
+    .link-underline {
+        background-image: linear-gradient(currentColor, currentColor);
+        background-size: 0% 1px;
+        background-position: 0 100%;
+        background-repeat: no-repeat;
+        transition: background-size 0.25s ease;
+    }
+
+    .link-underline:hover {
+        background-size: 100% 1px;
+    }
+}
+
 @keyframes fade-in-up {
     from { opacity: 0; transform: translateY(12px); }
     to { opacity: 1; transform: translateY(0); }
@@ -44,7 +94,7 @@
 }
 
 .animate-shimmer {
-    background: linear-gradient(90deg, #f3f4f6 25%, #e9ebee 37%, #f3f4f6 63%);
+    background: linear-gradient(90deg, #EFEBE3 25%, #E7E2D8 37%, #EFEBE3 63%);
     background-size: 800px 100%;
     animation: shimmer 1.4s linear infinite;
 }
@@ -72,13 +122,12 @@
 }
 
 :root {
-    --color-primary-500: #2f726b;
-    --color-primary-600: #1e5850;
-    --color-primary-800: #0c3233;
+    --pin: #1D1C19;
+    --pin-active: #C95B2C;
 }
 
 .map-pin-highlighted {
-    filter: drop-shadow(0 0 6px var(--color-primary-500));
+    filter: drop-shadow(0 0 6px var(--pin));
     transform: scale(1.3);
     transition: transform 0.15s ease;
 }
@@ -93,7 +142,7 @@
     left: 0;
     bottom: 0;
     transform: translate(-50%, -100%);
-    background: var(--color-primary-500);
+    background: var(--pin);
     color: #fff;
     font-size: 12px;
     font-weight: 600;
@@ -113,16 +162,16 @@
     transform: translateX(-50%);
     border-width: 5px 5px 0 5px;
     border-style: solid;
-    border-color: var(--color-primary-500) transparent transparent transparent;
+    border-color: var(--pin) transparent transparent transparent;
 }
 
 .map-pin-highlighted .price-marker-bubble {
-    background: var(--color-primary-800);
+    background: var(--pin-active);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
 }
 
 .map-pin-highlighted .price-marker-bubble::after {
-    border-top-color: var(--color-primary-800);
+    border-top-color: var(--pin-active);
 }
 
 .user-location-marker {
@@ -168,4 +217,23 @@
 input[type='password']::-ms-reveal,
 input[type='password']::-ms-clear {
     display: none;
+}
+
+/* Map clusters: ink discs with a soft halo instead of the plugin's traffic-light colors. */
+.leaflet-container .marker-cluster-small,
+.leaflet-container .marker-cluster-medium,
+.leaflet-container .marker-cluster-large {
+    background-color: rgba(20, 19, 17, 0.18);
+}
+.leaflet-container .marker-cluster-small div,
+.leaflet-container .marker-cluster-medium div,
+.leaflet-container .marker-cluster-large div {
+    background-color: #141311;
+    color: #ffffff;
+    font-family: 'Geist', ui-sans-serif, system-ui, sans-serif;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+.leaflet-container .marker-cluster-large div {
+    background-color: #C95B2C;
 }

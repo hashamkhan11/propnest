@@ -18,6 +18,14 @@ class PriceComponentTest extends TestCase
         $view->assertSee('$1,500.00');
     }
 
+    public function test_price_component_drops_cents_for_whole_listing_prices(): void
+    {
+        $view = $this->blade('<x-price whole :amount="$amount" />', ['amount' => 670000]);
+
+        $view->assertSee('$670,000');
+        $view->assertDontSee('$670,000.00');
+    }
+
     public function test_price_component_reflects_admin_configured_currency(): void
     {
         Settings::setCurrency(Currency::PKR);

@@ -1,8 +1,9 @@
-<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="max-w-5xl px-4 sm:px-6 lg:px-8 py-10">
     <x-admin.page-header
-        title="Agent Verification"
+        kicker="People"
+        title="Agent checks"
         icon="identification"
-        :subtitle="$agents->count() . ' ' . \Illuminate\Support\Str::plural('agent', $agents->count())"
+        :subtitle="$agents->count() . ' ' . \Illuminate\Support\Str::plural('agent', $agents->count()) . '. Verified agents get a badge on every listing, so only verify people you have checked.'"
     />
 
     @if ($agents->isEmpty())
@@ -12,16 +13,17 @@
             </x-slot>
         </x-empty-state>
     @else
-        <div class="space-y-3">
-            @foreach ($agents as $i => $agent)
-                <div wire:key="agent-{{ $agent->id }}" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-fade-in-up" style="animation-delay: {{ min($i, 8) * 40 }}ms">
-                    <div class="min-w-0">
-                        <p class="font-heading font-700 text-gray-900">{{ $agent->name }}</p>
+        <div class="bg-white rounded-xl border border-gray-900/10 divide-y divide-gray-900/10">
+            @foreach ($agents as $agent)
+                <div wire:key="agent-{{ $agent->id }}" class="px-5 py-4 flex flex-col sm:flex-row sm:items-center gap-4">
+                    <x-user-avatar :user="$agent" size="w-10 h-10" textClass="font-semibold text-sm" class="shrink-0 hidden sm:flex" />
+                    <div class="min-w-0 flex-1">
+                        <p class="font-medium text-primary-900">{{ $agent->name }}</p>
                         <p class="text-sm text-gray-500 truncate">{{ $agent->email }} &middot; {{ $agent->agentProfile->agency_name ?? 'No agency name set' }}</p>
-                        <x-badge :variant="$agent->agentProfile->verification_status->badgeVariant()" class="mt-2">
-                            {{ $agent->agentProfile->verification_status->label() }}
-                        </x-badge>
                     </div>
+                    <x-badge :variant="$agent->agentProfile->verification_status->badgeVariant()" class="shrink-0 self-start sm:self-center">
+                        {{ $agent->agentProfile->verification_status->label() }}
+                    </x-badge>
 
                     @if ($agent->agentProfile->verification_status !== \App\Enums\User\AgentVerificationStatus::Verified)
                         <x-button

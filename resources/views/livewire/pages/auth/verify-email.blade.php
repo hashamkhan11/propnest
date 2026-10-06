@@ -36,23 +36,22 @@ new #[Layout('layouts.guest')] class extends Component
 }; ?>
 
 <div>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
-    </div>
+    <h1 class="display text-[2.5rem] mb-2">Check your inbox</h1>
+    <p class="text-[15px] text-gray-600 mb-8 leading-relaxed">We sent a link to <span class="text-primary-900 font-medium">{{ auth()->user()->email }}</span>. Open it to confirm your email and you are in.</p>
 
     @if (session('status') == 'verification-link-sent')
-        <div class="mb-4 font-medium text-sm text-green-600">
-            {{ __('A new verification link has been sent to the email address you provided during registration.') }}
+        <div class="mb-6 flex items-start gap-2 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2.5 text-sm text-emerald-800">
+            <x-heroicon-o-check class="w-4 h-4 mt-0.5 shrink-0" />
+            {{ __('A fresh link is on its way.') }}
         </div>
     @endif
 
-    <div class="mt-4 flex items-center justify-between">
-        <x-primary-button wire:click="sendVerification">
-            {{ __('Resend Verification Email') }}
-        </x-primary-button>
+    <x-button wire:click="sendVerification" type="button" class="w-full justify-center">
+        {{ __('Send the link again') }}
+    </x-button>
 
-        <button wire:click="logout" type="submit" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-            {{ __('Log Out') }}
-        </button>
-    </div>
+    <p class="text-sm text-gray-600 text-center mt-8">
+        {{ __('Wrong account?') }}
+        <button wire:click="logout" type="button" class="text-primary-900 font-medium link-underline">{{ __('Sign out') }}</button>
+    </p>
 </div>

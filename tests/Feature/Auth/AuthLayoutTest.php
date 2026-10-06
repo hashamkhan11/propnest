@@ -15,7 +15,7 @@ class AuthLayoutTest extends TestCase
         $response = $this->get('/login');
 
         $response->assertOk();
-        $response->assertSee('Find your next home,');
+        $response->assertSee('Find a place');
         $response->assertSee('data-initial-open="true"', false);
     }
 
@@ -25,8 +25,8 @@ class AuthLayoutTest extends TestCase
 
         $this->assertStringContainsString('value="buyer"', $html);
         $this->assertStringContainsString('value="agent"', $html);
-        $this->assertStringContainsString('Buyer', $html);
-        $this->assertStringContainsString('Agent', $html);
+        $this->assertStringContainsString('Find a home', $html);
+        $this->assertStringContainsString('List homes', $html);
         $this->assertStringContainsString('wire:model.live="role"', $html);
     }
 
@@ -34,7 +34,7 @@ class AuthLayoutTest extends TestCase
     {
         $html = Blade::render('<x-role-selector name="role" :value="$value" />', ['value' => 'buyer']);
 
-        $this->assertStringContainsString('w-9 h-9', $html);
-        $this->assertStringContainsString('py-4', $html);
+        $this->assertStringContainsString('w-4 h-4', $html);
+        $this->assertStringContainsString('py-3', $html);
     }
 }

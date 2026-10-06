@@ -1,14 +1,12 @@
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="mb-6">
-        <h1 class="font-heading font-800 text-2xl text-gray-900">{{ $property ? 'Edit Listing' : 'New Listing' }}</h1>
-        <p class="text-gray-500 mt-1">{{ $property ? 'Update the details below.' : 'Fill in the details below — it will be saved as a Draft.' }}</p>
-    </div>
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+    <x-page-header kicker="{{ $property ? 'Edit listing' : 'New listing' }}" :title="$property ? $property->title : 'List a home'"
+        :description="$property ? 'Changes to a live listing are reviewed again before they show.' : 'Start with the basics. It saves as a draft, so nothing goes live until you submit it.'" />
 
     <form wire:submit="save" class="space-y-6">
         <x-card>
             <div class="flex items-center gap-3 mb-1">
-                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary-50 text-primary-600 font-heading font-700 text-sm">1</span>
-                <h2 class="font-heading font-700 text-lg text-gray-900">Basic Info</h2>
+                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary-50 text-primary-900 font-semibold text-sm">1</span>
+                <h2 class="font-semibold text-lg text-gray-900">Basic Info</h2>
             </div>
             <p class="text-sm text-gray-500 mb-5 ml-11">The headline and description buyers will see first.</p>
 
@@ -21,7 +19,7 @@
 
                 <div>
                     <x-input-label for="description" value="Description" />
-                    <textarea wire:model="description" id="description" rows="5" class="border-gray-300 focus:border-primary-600 focus:ring-primary-600 rounded-md shadow-sm w-full" placeholder="Describe the property, neighborhood, and what makes it stand out."></textarea>
+                    <textarea wire:model="description" id="description" rows="5" class="border-gray-300 focus:border-primary-900 focus:ring-primary-900 rounded-md w-full" placeholder="Describe the property, neighborhood, and what makes it stand out."></textarea>
                     <x-input-error :messages="$errors->get('description')" class="mt-2" />
                 </div>
             </div>
@@ -29,15 +27,15 @@
 
         <x-card>
             <div class="flex items-center gap-3 mb-1">
-                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary-50 text-primary-600 font-heading font-700 text-sm">2</span>
-                <h2 class="font-heading font-700 text-lg text-gray-900">Details</h2>
+                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary-50 text-primary-900 font-semibold text-sm">2</span>
+                <h2 class="font-semibold text-lg text-gray-900">Details</h2>
             </div>
             <p class="text-sm text-gray-500 mb-5 ml-11">Category, price, and specifications.</p>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5" x-data="{ categoryId: @entangle('categoryId'), categorySlugs: {{ \Illuminate\Support\Js::from($categories->pluck('slug', 'id')) }} }">
                 <div>
                     <x-input-label for="categoryId" value="Property Category" />
-                    <select wire:model="categoryId" id="categoryId" class="border-gray-300 focus:border-primary-600 focus:ring-primary-600 rounded-md shadow-sm w-full">
+                    <select wire:model="categoryId" id="categoryId" class="border-gray-300 focus:border-primary-900 focus:ring-primary-900 rounded-md w-full">
                         <option value="">Select a category</option>
                         @foreach ($categories as $category)
                             <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -48,7 +46,7 @@
 
                 <div>
                     <x-input-label for="purpose" value="Listing Purpose" />
-                    <select wire:model="purpose" id="purpose" class="border-gray-300 focus:border-primary-600 focus:ring-primary-600 rounded-md shadow-sm w-full">
+                    <select wire:model="purpose" id="purpose" class="border-gray-300 focus:border-primary-900 focus:ring-primary-900 rounded-md w-full">
                         @foreach ($purposes as $purposeOption)
                             <option value="{{ $purposeOption->value }}">{{ $purposeOption->label() }}</option>
                         @endforeach
@@ -87,8 +85,8 @@
 
         <x-card>
             <div class="flex items-center gap-3 mb-1">
-                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary-50 text-primary-600 font-heading font-700 text-sm">3</span>
-                <h2 class="font-heading font-700 text-lg text-gray-900">Location</h2>
+                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary-50 text-primary-900 font-semibold text-sm">3</span>
+                <h2 class="font-semibold text-lg text-gray-900">Location</h2>
             </div>
             <p class="text-sm text-gray-500 mb-5 ml-11">Click the map or drag the pin to set the exact location, or type coordinates directly.</p>
 
@@ -101,7 +99,7 @@
 
                 <div>
                     <x-input-label for="cityId" value="City" />
-                    <select wire:model="cityId" id="cityId" class="border-gray-300 focus:border-primary-600 focus:ring-primary-600 rounded-md shadow-sm w-full">
+                    <select wire:model="cityId" id="cityId" class="border-gray-300 focus:border-primary-900 focus:ring-primary-900 rounded-md w-full">
                         <option value="">Select a city</option>
                         @foreach ($citiesByRegion as $regionName => $citiesInRegion)
                             <optgroup label="{{ $regionName }}">
@@ -134,15 +132,15 @@
 
         <x-card>
             <div class="flex items-center gap-3 mb-1">
-                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary-50 text-primary-600 font-heading font-700 text-sm">4</span>
-                <h2 class="font-heading font-700 text-lg text-gray-900">Amenities</h2>
+                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary-50 text-primary-900 font-semibold text-sm">4</span>
+                <h2 class="font-semibold text-lg text-gray-900">Amenities</h2>
             </div>
             <p class="text-sm text-gray-500 mb-5 ml-11">Select everything that applies.</p>
 
             <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 @foreach ($amenities as $amenity)
                     <label class="flex items-center gap-2.5 text-sm text-gray-700 bg-gray-50 rounded-lg px-3 py-2.5 cursor-pointer hover:bg-gray-100 transition-colors">
-                        <input type="checkbox" wire:model="selectedAmenities" value="{{ $amenity->id }}" class="rounded border-gray-300 text-primary-600 focus:ring-primary-600">
+                        <input type="checkbox" wire:model="selectedAmenities" value="{{ $amenity->id }}" class="rounded border-gray-300 text-primary-900 focus:ring-primary-900">
                         {{ $amenity->name }}
                     </label>
                 @endforeach
@@ -152,8 +150,8 @@
 
         <x-card>
             <div class="flex items-center gap-3 mb-1">
-                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary-50 text-primary-600 font-heading font-700 text-sm">5</span>
-                <h2 class="font-heading font-700 text-lg text-gray-900">Photos</h2>
+                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary-50 text-primary-900 font-semibold text-sm">5</span>
+                <h2 class="font-semibold text-lg text-gray-900">Photos</h2>
             </div>
             <p class="text-sm text-gray-500 mb-5 ml-11">A cover photo plus a gallery of 4-5 more is ideal.</p>
 
@@ -168,7 +166,7 @@
                     }"
                 >
                     <x-input-label for="coverImage" value="Cover Photo" class="mb-2" />
-                    <label for="coverImage" class="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-gray-300 hover:border-primary-400 rounded-xl py-8 px-4 text-center cursor-pointer transition-colors bg-gray-50/50" x-show="!previewUrl">
+                    <label for="coverImage" class="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-gray-300 hover:border-gray-900/25 rounded-xl py-8 px-4 text-center cursor-pointer transition-colors bg-gray-50/50" x-show="!previewUrl">
                         <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 16.5V9.75m0 0l-3.75 3.75M12 9.75l3.75 3.75M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" /></svg>
                         <span class="text-sm font-medium text-gray-600">Click to choose a cover photo</span>
                         <span class="text-xs text-gray-400">PNG or JPG</span>
@@ -184,7 +182,7 @@
                     <input type="file" wire:model="coverImage" id="coverImage" accept="image/*" class="hidden" x-on:change="onSelect($event)">
                     <x-input-error :messages="$errors->get('coverImage')" class="mt-2" />
                     @if ($coverImage)
-                        <p class="text-sm text-primary-700 mt-2">Selected: {{ $coverImage->getClientOriginalName() }}</p>
+                        <p class="text-sm text-primary-900 mt-2">Selected: {{ $coverImage->getClientOriginalName() }}</p>
                     @elseif ($property?->coverImage)
                         <p class="text-sm text-gray-500 mt-2">Current cover photo will be replaced only if you choose a new file.</p>
                     @endif
@@ -212,7 +210,7 @@
                 >
                     <x-input-label for="galleryImagesPicker" value="Gallery Photos" class="mb-2" />
 
-                    <label for="galleryImagesPicker" class="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-gray-300 hover:border-primary-400 rounded-xl py-8 px-4 text-center cursor-pointer transition-colors bg-gray-50/50">
+                    <label for="galleryImagesPicker" class="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-gray-300 hover:border-gray-900/25 rounded-xl py-8 px-4 text-center cursor-pointer transition-colors bg-gray-50/50">
                         <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M18 22.5H6a2.25 2.25 0 01-2.25-2.25V3.75A2.25 2.25 0 016 1.5h9.879a1.5 1.5 0 011.06.44l3.622 3.621a1.5 1.5 0 01.439 1.061V20.25A2.25 2.25 0 0118 22.5zM10.5 8.25a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" /></svg>
                         <span class="text-sm font-medium text-gray-600">Click to add gallery photos</span>
                         <span class="text-xs text-gray-400">Can be used multiple times — each selection adds to the list</span>
@@ -237,12 +235,15 @@
             </div>
         </x-card>
 
-        <div class="sticky bottom-4 flex items-center gap-4 bg-white rounded-2xl border border-gray-100 shadow-lg shadow-gray-900/5 px-6 py-4">
-            <x-button type="submit" wire:loading.attr="disabled" wire:target="save">
-                <span wire:loading.remove wire:target="save">{{ $property ? 'Save Changes' : 'Create Draft Listing' }}</span>
-                <span wire:loading wire:target="save">Saving&hellip;</span>
-            </x-button>
-            <a href="{{ route('agent.properties.index') }}" wire:navigate class="text-sm font-semibold text-gray-500 hover:text-gray-700">Cancel</a>
+        <div class="sticky bottom-4 z-10 flex items-center justify-between gap-4 bg-primary-900 text-white rounded-xl shadow-lg shadow-gray-900/10 pl-6 pr-3 py-3">
+            <p class="hidden sm:block text-sm text-white/70">{{ $property ? 'Edits go back to review before they show.' : 'Saved as a draft. Submit it for review from Your listings.' }}</p>
+            <div class="flex items-center gap-4 ml-auto">
+                <a href="{{ route('agent.properties.index') }}" wire:navigate class="text-sm text-white/70 hover:text-white">Cancel</a>
+                <x-button type="submit" variant="accent" wire:loading.attr="disabled" wire:target="save">
+                    <span wire:loading.remove wire:target="save">{{ $property ? 'Save changes' : 'Save draft' }}</span>
+                    <span wire:loading wire:target="save">Saving&hellip;</span>
+                </x-button>
+            </div>
         </div>
     </form>
 </div>

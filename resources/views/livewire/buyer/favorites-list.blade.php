@@ -1,23 +1,12 @@
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <div class="flex items-center gap-3">
-            <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-red-50 text-red-500 flex items-center justify-center shrink-0">
-                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9.653 16.915l-.005-.003-.019-.01a20.759 20.759 0 01-1.162-.682 22.045 22.045 0 01-2.582-1.9C4.045 12.733 2 10.352 2 7.5 2 5.015 3.989 3 6.5 3c1.343 0 2.622.68 3.5 1.72C10.878 3.68 12.157 3 13.5 3 16.011 3 18 5.015 18 7.5c0 2.852-2.045 5.233-3.885 6.82a22.049 22.049 0 01-3.744 2.582l-.019.01-.005.003h-.002a.739.739 0 01-.69.001l-.002-.001z" />
-                </svg>
-            </div>
-            <div>
-                <h1 class="font-heading font-800 text-2xl sm:text-3xl text-gray-900">My Favorites</h1>
-                <p class="text-gray-500 mt-0.5">{{ $favorites->total() }} saved {{ \Illuminate\Support\Str::plural('listing', $favorites->total()) }}</p>
-            </div>
-        </div>
-
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+    <x-page-header kicker="Saved homes" title="Your shortlist">
+        <x-slot:description>{{ $favorites->total() }} {{ \Illuminate\Support\Str::plural('home', $favorites->total()) }} saved. Tap the heart on any listing to add or remove it.</x-slot:description>
         @if (! $favorites->isEmpty())
-            <a href="{{ route('properties.index') }}" wire:navigate class="self-start sm:self-auto">
-                <x-button type="button" variant="secondary">Browse more listings</x-button>
-            </a>
+            <x-slot:actions>
+                <a href="{{ route('properties.index') }}" wire:navigate><x-button type="button" variant="secondary">Keep looking</x-button></a>
+            </x-slot:actions>
         @endif
-    </div>
+    </x-page-header>
 
     @if ($favorites->isEmpty())
         <x-empty-state

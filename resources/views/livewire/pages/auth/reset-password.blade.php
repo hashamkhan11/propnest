@@ -64,14 +64,14 @@ new #[Layout('layouts.guest')] class extends Component
 }; ?>
 
 <div>
-    <h1 class="font-heading text-2xl md:text-3xl font-semibold text-primary-900 mb-2">Reset your password</h1>
-    <p class="text-sm text-gray-600 mb-8">Choose a new password for your account.</p>
+    <h1 class="display text-[2.5rem] mb-2">Set a new password</h1>
+    <p class="text-[15px] text-gray-600 mb-8 leading-relaxed">Pick something you have not used here before.</p>
 
     <form wire:submit="resetPassword" class="space-y-5">
         <div>
             <x-input-label for="email" :value="__('Email')" />
             <div class="relative mt-1">
-                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-primary-400">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                     <x-icon.mail class="w-5 h-5" />
                 </span>
                 <x-text-input wire:model="email" id="email" class="block w-full pl-10" type="email" name="email" required autofocus autocomplete="username" :invalid="$errors->has('email')" />
@@ -82,7 +82,7 @@ new #[Layout('layouts.guest')] class extends Component
         <div x-data="{ show: false }">
             <x-input-label for="password" :value="__('Password')" />
             <div class="relative mt-1">
-                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-primary-400">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                     <x-icon.lock class="w-5 h-5" />
                 </span>
                 <x-text-input
@@ -100,9 +100,9 @@ new #[Layout('layouts.guest')] class extends Component
         </div>
 
         <div x-data="{ show: false }">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+            <x-input-label for="password_confirmation" :value="__('Confirm password')" />
             <div class="relative mt-1">
-                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-primary-400">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                     <x-icon.lock class="w-5 h-5" />
                 </span>
                 <x-text-input
@@ -120,7 +120,7 @@ new #[Layout('layouts.guest')] class extends Component
         </div>
 
         <x-button class="w-full justify-center" wire:loading.attr="disabled" wire:target="resetPassword">
-            <span wire:loading.remove wire:target="resetPassword">{{ __('Reset Password') }}</span>
+            <span wire:loading.remove wire:target="resetPassword">{{ __('Save new password') }}</span>
             <span wire:loading wire:target="resetPassword" class="inline-flex items-center gap-2">
                 <svg class="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/></svg>
                 Saving…

@@ -38,18 +38,13 @@ new class extends Component
     }
 }; ?>
 
-<section>
-    <header>
-        <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Update Password') }}
-        </h2>
-
-        <p class="mt-1 text-sm text-gray-600">
-            {{ __('Ensure your account is using a long, random password to stay secure.') }}
-        </p>
+<section class="grid md:grid-cols-12 gap-x-10 gap-y-5">
+    <header class="md:col-span-4">
+        <h2 class="text-[15px] font-semibold text-primary-900">Password</h2>
+        <p class="mt-1 text-sm text-gray-500 leading-relaxed">Use at least eight characters. A password manager makes this painless.</p>
     </header>
 
-    <form wire:submit="updatePassword" class="mt-6 space-y-6">
+    <form wire:submit="updatePassword" class="md:col-span-8 space-y-6">
         <div>
             <x-input-label for="update_password_current_password" :value="__('Current Password')" />
             <x-text-input wire:model="current_password" id="update_password_current_password" name="current_password" type="password" class="mt-1 block w-full" autocomplete="current-password" />
@@ -63,7 +58,7 @@ new class extends Component
         </div>
 
         <div>
-            <x-input-label for="update_password_password_confirmation" :value="__('Confirm Password')" />
+            <x-input-label for="update_password_password_confirmation" :value="__('Confirm password')" />
             <x-text-input wire:model="password_confirmation" id="update_password_password_confirmation" name="password_confirmation" type="password" class="mt-1 block w-full" autocomplete="new-password" />
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>

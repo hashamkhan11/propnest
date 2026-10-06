@@ -159,7 +159,7 @@
                 const distance = this.$store.mapSync.distanceLabel(pin.lat, pin.lng);
                 if (distance) {
                     const popupDistance = document.createElement('div');
-                    popupDistance.style.cssText = 'font-size:11px;color:#6b7280;margin-top:2px;';
+                    popupDistance.style.cssText = 'font-size:11px;color:#78716C;margin-top:2px;';
                     popupDistance.textContent = distance;
                     popupLink.appendChild(popupDistance);
                 }
@@ -200,7 +200,7 @@
             if (this.radiusCircle) this.radiusCircle.remove();
 
             this.radiusMarker = L.marker([lat, lng]).addTo(this.map);
-            this.radiusCircle = L.circle([lat, lng], { radius: this.radiusKm * 1000, color: '#2f726b', fillOpacity: 0.1 }).addTo(this.map);
+            this.radiusCircle = L.circle([lat, lng], { radius: this.radiusKm * 1000, color: '#C95B2C', fillOpacity: 0.1 }).addTo(this.map);
         },
         updateRadiusCircle() {
             if (this.radiusCircle) {
@@ -238,14 +238,14 @@
         },
         redrawDrawLine() {
             if (this.drawPolyline) this.drawPolyline.remove();
-            this.drawPolyline = L.polyline(this.drawPoints.map((p) => [p.lat, p.lng]), { color: '#2f726b' }).addTo(this.map);
+            this.drawPolyline = L.polyline(this.drawPoints.map((p) => [p.lat, p.lng]), { color: '#C95B2C' }).addTo(this.map);
         },
         closeDrawPolygon() {
             if (this.drawPoints.length < 3) return;
 
             if (this.drawPolyline) { this.drawPolyline.remove(); this.drawPolyline = null; }
 
-            this.drawPolygonLayer = L.polygon(this.drawPoints.map((p) => [p.lat, p.lng]), { color: '#2f726b', fillOpacity: 0.1 }).addTo(this.map);
+            this.drawPolygonLayer = L.polygon(this.drawPoints.map((p) => [p.lat, p.lng]), { color: '#C95B2C', fillOpacity: 0.1 }).addTo(this.map);
             this.$wire.applyPolygonSearch(this.drawPoints.map((p) => [p.lat, p.lng]));
             this.mode = 'none';
         },
@@ -279,23 +279,23 @@
             type="button"
             @click="searchThisArea()"
             x-show="showSearchThisArea"
-            class="bg-white shadow-md rounded-md px-3 py-1.5 text-sm font-medium text-primary-700 hover:bg-primary-50"
+            class="bg-white shadow-md rounded-md px-3 py-1.5 text-sm font-medium text-primary-900 hover:bg-primary-50"
         >
             Search this area
         </button>
     </div>
 
     <div class="absolute z-[1000] top-3 right-3 flex flex-col gap-1 bg-white shadow-md rounded-md p-2">
-        <button type="button" @click="locateMe()" :disabled="locating" :class="$store.mapSync.userLat !== null ? 'bg-primary-600 text-white' : 'text-gray-700 hover:bg-gray-100'" class="rounded px-2 py-1 text-xs font-medium disabled:opacity-50" x-text="locating ? 'Locating…' : 'My Location'"></button>
-        <button type="button" @click="activateRadiusTool()" :class="mode === 'radius' ? 'bg-primary-600 text-white' : 'text-gray-700 hover:bg-gray-100'" class="rounded px-2 py-1 text-xs font-medium">Radius</button>
-        <button type="button" @click="activateDrawTool()" :class="mode === 'draw' ? 'bg-primary-600 text-white' : 'text-gray-700 hover:bg-gray-100'" class="rounded px-2 py-1 text-xs font-medium">Draw</button>
+        <button type="button" @click="locateMe()" :disabled="locating" :class="$store.mapSync.userLat !== null ? 'bg-primary-900 text-white' : 'text-gray-700 hover:bg-gray-100'" class="rounded px-2 py-1 text-xs font-medium disabled:opacity-50" x-text="locating ? 'Locating…' : 'My Location'"></button>
+        <button type="button" @click="activateRadiusTool()" :class="mode === 'radius' ? 'bg-primary-900 text-white' : 'text-gray-700 hover:bg-gray-100'" class="rounded px-2 py-1 text-xs font-medium">Radius</button>
+        <button type="button" @click="activateDrawTool()" :class="mode === 'draw' ? 'bg-primary-900 text-white' : 'text-gray-700 hover:bg-gray-100'" class="rounded px-2 py-1 text-xs font-medium">Draw</button>
         <button type="button" @click="clearMapFilter()" class="rounded px-2 py-1 text-xs font-medium text-gray-700 hover:bg-gray-100">Clear map filter</button>
     </div>
 
     <div x-show="mode === 'radius'" x-cloak class="absolute z-[1000] bottom-3 left-3 right-3 sm:right-auto bg-white shadow-md rounded-md p-3 w-auto sm:w-56">
         <label class="text-xs font-medium text-gray-700">Radius: <span x-text="radiusKm"></span> km</label>
         <input type="range" min="1" max="50" step="1" x-model.number="radiusKm" @input="updateRadiusCircle()" class="w-full">
-        <button type="button" @click="confirmRadiusSearch()" :disabled="!radiusCenter" class="mt-2 w-full bg-primary-600 disabled:opacity-40 text-white text-xs font-medium rounded px-2 py-1.5">
+        <button type="button" @click="confirmRadiusSearch()" :disabled="!radiusCenter" class="mt-2 w-full bg-primary-900 disabled:opacity-40 text-white text-xs font-medium rounded px-2 py-1.5">
             Search this radius
         </button>
         <p x-show="!radiusCenter" class="mt-1 text-[11px] text-gray-500">Click the map to place the center.</p>

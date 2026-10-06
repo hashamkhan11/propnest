@@ -41,8 +41,12 @@ enum Currency: string
         };
     }
 
-    public function format(float|string $amount): string
+    /**
+     * Listing prices read better without cents ("$670,000"), while payments
+     * keep them so receipts match the charged amount exactly.
+     */
+    public function format(float|string $amount, bool $whole = false): string
     {
-        return $this->prefix().number_format((float) $amount, 2);
+        return $this->prefix().number_format((float) $amount, $whole ? 0 : 2);
     }
 }

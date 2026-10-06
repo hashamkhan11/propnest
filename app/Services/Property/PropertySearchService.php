@@ -60,7 +60,7 @@ class PropertySearchService
             'lat' => (float) $property->latitude,
             'lng' => (float) $property->longitude,
             'price' => (float) $property->price,
-            'formattedPrice' => Settings::currency()->format($property->price),
+            'formattedPrice' => Settings::currency()->format($property->price, whole: true),
             'title' => $property->title,
             'purpose' => $property->purpose->value,
             'thumbnail' => $property->coverImage ? Storage::url($property->coverImage->thumbnailDisplayPath()) : null,

@@ -1,6 +1,7 @@
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
     <x-admin.page-header
-        title="Listing Reports"
+        kicker="Listings"
+        title="Reports"
         icon="flag"
         :subtitle="$reports->total() . ' pending ' . \Illuminate\Support\Str::plural('report', $reports->total())"
     />
@@ -23,12 +24,12 @@
                         @if ($resolvingReportId === $report->id)
                             <div class="space-y-2 text-left">
                                 <label class="flex items-center gap-2 text-sm text-gray-700">
-                                    <input type="checkbox" wire:model.live="alsoReject" class="rounded border-gray-300 text-primary-600 focus:ring-primary-600">
+                                    <input type="checkbox" wire:model.live="alsoReject" class="rounded border-gray-300 text-primary-900 focus:ring-primary-900">
                                     Also reject this listing
                                 </label>
                                 @if ($alsoReject)
                                     <textarea wire:model="rejectionReason" rows="2" placeholder="Rejection reason"
-                                              class="border-gray-300 focus:border-primary-600 focus:ring-primary-600 rounded-md shadow-sm w-full text-sm"></textarea>
+                                              class="border-gray-300 focus:border-primary-900 focus:ring-primary-900 rounded-md w-full text-sm"></textarea>
                                     <x-input-error :messages="$errors->get('rejectionReason')" />
                                 @endif
                                 <div class="flex gap-2">
@@ -50,8 +51,8 @@
         {{-- Mobile card list --}}
         <div class="md:hidden space-y-3">
             @foreach ($reports as $report)
-                <div wire:key="report-card-{{ $report->id }}" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
-                    <p class="font-heading font-700 text-gray-900 truncate">{{ $report->property->title }}</p>
+                <div wire:key="report-card-{{ $report->id }}" class="bg-white rounded-xl border border-gray-900/10 p-4">
+                    <p class="font-semibold text-gray-900 truncate">{{ $report->property->title }}</p>
                     <p class="text-sm text-gray-500">Reported by {{ $report->reportedBy->name }}</p>
 
                     <div class="mt-3 text-sm">
@@ -61,16 +62,16 @@
                         @endif
                     </div>
 
-                    <div class="mt-4 pt-3 border-t border-gray-100">
+                    <div class="mt-4 pt-3 border-t border-gray-900/10">
                         @if ($resolvingReportId === $report->id)
                             <div class="space-y-2">
                                 <label class="flex items-center gap-2 text-sm text-gray-700">
-                                    <input type="checkbox" wire:model.live="alsoReject" class="rounded border-gray-300 text-primary-600 focus:ring-primary-600">
+                                    <input type="checkbox" wire:model.live="alsoReject" class="rounded border-gray-300 text-primary-900 focus:ring-primary-900">
                                     Also reject this listing
                                 </label>
                                 @if ($alsoReject)
                                     <textarea wire:model="rejectionReason" rows="2" placeholder="Rejection reason"
-                                              class="border-gray-300 focus:border-primary-600 focus:ring-primary-600 rounded-md shadow-sm w-full text-sm"></textarea>
+                                              class="border-gray-300 focus:border-primary-900 focus:ring-primary-900 rounded-md w-full text-sm"></textarea>
                                     <x-input-error :messages="$errors->get('rejectionReason')" />
                                 @endif
                                 <div class="flex gap-2">

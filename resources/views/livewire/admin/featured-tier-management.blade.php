@@ -1,13 +1,14 @@
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
     <x-admin.page-header
-        title="Featured Pricing"
+        kicker="Money"
+        title="Featured pricing"
         icon="star"
         color="accent"
-        :subtitle="$tiers->count() . ' ' . \Illuminate\Support\Str::plural('tier', $tiers->count()) . ' · shown to agents when they feature a listing'"
+        :subtitle="$tiers->count() . ' ' . \Illuminate\Support\Str::plural('tier', $tiers->count()) . '. Agents pick one when they feature a listing.'"
     />
 
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6 mb-8">
-        <h2 class="font-heading font-700 text-lg text-gray-900 mb-4">{{ $editingId ? 'Edit Tier' : 'Add a New Tier' }}</h2>
+    <div class="bg-white rounded-xl border border-gray-900/10 p-4 sm:p-6 mb-8">
+        <h2 class="text-[15px] font-semibold text-primary-900 mb-4">{{ $editingId ? 'Edit tier' : 'New tier' }}</h2>
 
         <form wire:submit="save" class="grid grid-cols-1 sm:grid-cols-4 gap-3 items-start">
             <div class="flex flex-col">
@@ -26,7 +27,7 @@
                 <div class="mb-1 min-h-[2rem]" aria-hidden="true"></div>
                 <div class="flex flex-wrap items-center gap-2">
                     <x-button type="submit" class="flex-1 justify-center" wire:loading.attr="disabled" wire:target="save">
-                        <span wire:loading.remove wire:target="save">{{ $editingId ? 'Update Tier' : 'Add Tier' }}</span>
+                        <span wire:loading.remove wire:target="save">{{ $editingId ? 'Save tier' : 'Add tier' }}</span>
                         <span wire:loading wire:target="save" class="inline-flex items-center gap-1.5">
                             <svg class="animate-spin w-3.5 h-3.5" viewBox="0 0 24 24" fill="none"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/></svg>
                             Saving&hellip;
@@ -58,7 +59,7 @@
             @foreach ($tiers as $index => $tier)
                 <div
                     wire:key="tier-{{ $tier->id }}"
-                    class="animate-fade-in-up relative bg-white rounded-2xl border shadow-sm hover:shadow-md transition-all p-5 sm:p-6 flex flex-col {{ $tier->is_active ? 'border-primary-100' : 'border-gray-100 opacity-70' }}"
+                    class="animate-fade-in-up relative bg-white rounded-xl border transition-all p-5 sm:p-6 flex flex-col {{ $tier->is_active ? 'border-gray-900/10' : 'border-gray-900/10 opacity-70' }}"
                     style="animation-delay: {{ min($index, 8) * 40 }}ms"
                 >
                     @if ($editingId === $tier->id)
@@ -69,11 +70,11 @@
 
                     <div class="flex-1">
                         <div class="flex items-start justify-between gap-2">
-                            <h3 class="font-heading font-700 text-lg text-gray-900">{{ $tier->name }}</h3>
+                            <h3 class="font-semibold text-lg text-gray-900">{{ $tier->name }}</h3>
                             <x-badge :variant="$tier->is_active ? 'success' : 'gray'" class="shrink-0">{{ $tier->is_active ? 'Active' : 'Inactive' }}</x-badge>
                         </div>
 
-                        <div class="mt-3 font-heading font-800 text-3xl text-primary-800">
+                        <div class="mt-3 font-semibold tracking-tight text-3xl text-primary-800">
                             <x-price :amount="$tier->price_cents / 100" />
                         </div>
 
@@ -83,7 +84,7 @@
                         </p>
                     </div>
 
-                    <div class="mt-5 pt-4 border-t border-gray-100 flex items-center gap-2">
+                    <div class="mt-5 pt-4 border-t border-gray-900/10 flex items-center gap-2">
                         <x-button type="button" variant="secondary" class="flex-1 justify-center" wire:click="startEdit({{ $tier->id }})">
                             Edit
                         </x-button>

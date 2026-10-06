@@ -47,6 +47,15 @@ Built with **Laravel 13**, **Livewire 3 / Volt**, **Tailwind CSS**, **Stripe** a
 - Scheduled commands that expire featured listings, subscriptions and stale payments
 - Queued jobs for emails, image processing and saved-search matching
 
+## Design
+
+The interface is built to feel like a property publication, not a template:
+
+- **Palette:** warm paper background (`#F6F4EF`), near-black ink for text and primary actions, and one terracotta accent (`#C95B2C`) used sparingly for featured items and the brand mark.
+- **Type:** Geist for the interface, Instrument Serif for page headlines, and a small monospace label style for section kickers. Prices and counts use tabular figures so columns line up.
+- **Structure:** hairline borders instead of heavy shadows, a consistent page header on every screen, and a dark sidebar that keeps the admin console separate from the public site.
+- **Copy:** short, plain sentences in sentence case that say what happens next ("Send back to review", "Email me a reset link").
+
 ## Tech stack
 
 | Layer | Tools |

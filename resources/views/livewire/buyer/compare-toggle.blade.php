@@ -4,7 +4,7 @@
             type="button"
             wire:click.stop.prevent="toggle"
             @disabled(!$isSelected && $isFull)
-            class="w-8 h-8 flex items-center justify-center rounded-full shadow transition {{ $isSelected ? 'bg-primary-600 text-white' : 'bg-white/90 text-gray-400 hover:bg-white' }} {{ !$isSelected && $isFull ? 'opacity-40 cursor-not-allowed' : '' }}"
+            class="w-8 h-8 flex items-center justify-center rounded-full shadow-sm ring-1 ring-black/5 transition {{ $isSelected ? 'bg-primary-900 text-white' : 'bg-white/95 text-primary-900 hover:bg-white' }} {{ !$isSelected && $isFull ? 'opacity-40 cursor-not-allowed' : '' }}"
             aria-label="{{ $isSelected ? 'Remove from comparison' : 'Add to comparison' }}"
             title="{{ !$isSelected && $isFull ? 'You can compare up to 3 properties' : ($isSelected ? 'Remove from comparison' : 'Add to comparison') }}"
         >

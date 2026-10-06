@@ -18,10 +18,10 @@
             x-transition:leave-start="opacity-100"
             x-transition:leave-end="opacity-0"
             class="w-full sm:w-96 bg-white rounded-lg shadow-lg border-l-4 overflow-hidden pointer-events-auto"
-            :class="toast.type === 'success' ? 'border-primary-600' : 'border-red-500'"
+            :class="toast.type === 'success' ? 'border-primary-900' : 'border-red-500'"
         >
             <div class="flex items-start gap-3 px-4 py-3">
-                <span class="flex-shrink-0 mt-0.5" :class="toast.type === 'success' ? 'text-primary-600' : 'text-red-500'">
+                <span class="flex-shrink-0 mt-0.5" :class="toast.type === 'success' ? 'text-primary-900' : 'text-red-500'">
                     <svg x-show="toast.type === 'success'" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75l2.25 2.25 4.5-4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -37,7 +37,7 @@
             </div>
             <div
                 class="h-0.5"
-                :class="toast.type === 'success' ? 'bg-primary-600' : 'bg-red-500'"
+                :class="toast.type === 'success' ? 'bg-primary-900' : 'bg-red-500'"
                 x-data="{ collapse: false }"
                 x-init="setTimeout(() => collapse = true, 10)"
                 :style="collapse ? 'width: 0%; transition: width 5000ms linear;' : 'width: 100%;'"

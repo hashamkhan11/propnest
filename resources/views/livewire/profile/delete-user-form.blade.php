@@ -23,31 +23,28 @@ new class extends Component
     }
 }; ?>
 
-<section class="space-y-6">
-    <header>
-        <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Delete Account') }}
-        </h2>
-
-        <p class="mt-1 text-sm text-gray-600">
-            {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.') }}
-        </p>
+<section class="grid md:grid-cols-12 gap-x-10 gap-y-5">
+    <header class="md:col-span-4">
+        <h2 class="text-[15px] font-semibold text-primary-900">Delete account</h2>
+        <p class="mt-1 text-sm text-gray-500 leading-relaxed">This removes your profile, saved homes, searches and messages for good. It cannot be undone.</p>
     </header>
 
-    <x-danger-button
-        x-data=""
-        x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')"
-    >{{ __('Delete Account') }}</x-danger-button>
+    <div class="md:col-span-8 flex md:justify-end items-start">
+        <x-danger-button
+            x-data=""
+            x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')"
+        >{{ __('Delete my account') }}</x-danger-button>
+    </div>
 
     <x-modal name="confirm-user-deletion" :show="$errors->isNotEmpty()" focusable>
         <form wire:submit="deleteUser" class="p-6">
 
             <h2 class="text-lg font-medium text-gray-900">
-                {{ __('Are you sure you want to delete your account?') }}
+                {{ __('Delete your account?') }}
             </h2>
 
             <p class="mt-1 text-sm text-gray-600">
-                {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.') }}
+                {{ __('Everything tied to it goes with it. Enter your password to confirm.') }}
             </p>
 
             <div class="mt-6">
@@ -71,7 +68,7 @@ new class extends Component
                 </x-secondary-button>
 
                 <x-danger-button class="ms-3">
-                    {{ __('Delete Account') }}
+                    {{ __('Delete for good') }}
                 </x-danger-button>
             </div>
         </form>

@@ -1,8 +1,9 @@
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
     <x-admin.page-header
-        title="Contact Messages"
+        kicker="Audience"
+        title="Messages"
         icon="envelope"
-        :subtitle="$messages->total() . ' total ' . \Illuminate\Support\Str::plural('message', $messages->total())"
+        :subtitle="$messages->total() . ' ' . \Illuminate\Support\Str::plural('message', $messages->total())"
     />
 
     @if ($messages->isEmpty())
@@ -43,10 +44,10 @@
         {{-- Mobile card list --}}
         <div class="md:hidden space-y-3">
             @foreach ($messages as $message)
-                <div wire:key="contact-message-card-{{ $message->id }}" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
+                <div wire:key="contact-message-card-{{ $message->id }}" class="bg-white rounded-xl border border-gray-900/10 p-4">
                     <div class="flex items-start justify-between gap-2">
                         <div class="min-w-0">
-                            <p class="font-heading font-700 text-gray-900 truncate">{{ $message->name }}</p>
+                            <p class="font-semibold text-gray-900 truncate">{{ $message->name }}</p>
                             <p class="text-sm text-gray-500 truncate">{{ $message->email }}</p>
                         </div>
                         <x-badge :variant="$message->status->badgeVariant()" class="shrink-0">{{ $message->status->label() }}</x-badge>
@@ -58,12 +59,12 @@
                     </div>
 
                     @if ($viewingMessageId === $message->id)
-                        <div class="mt-3 pt-3 border-t border-gray-100">
+                        <div class="mt-3 pt-3 border-t border-gray-900/10">
                             @include('livewire.admin.partials.contact-message-thread', ['message' => $message])
                         </div>
                     @endif
 
-                    <div class="mt-4 pt-3 border-t border-gray-100">
+                    <div class="mt-4 pt-3 border-t border-gray-900/10">
                         <x-button
                             type="button"
                             variant="secondary"

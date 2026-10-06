@@ -7,10 +7,10 @@ $subtitleClasses = $align === 'center' ? 'mx-auto' : '';
 
 <div {{ $attributes->class([$wrapClasses]) }}>
     @if ($eyebrow)
-        <p class="font-heading font-700 text-accent-600 text-xs uppercase tracking-[0.15em] mb-1">{{ $eyebrow }}</p>
+        <p class="kicker mb-3">{{ $eyebrow }}</p>
     @endif
-    <h2 class="font-heading font-700 text-2xl sm:text-3xl text-primary-900">{{ $title }}</h2>
+    <h2 class="display text-4xl sm:text-5xl">{{ $title }}</h2>
     @if ($subtitle)
-        <p class="mt-2 text-sm text-gray-600 max-w-md {{ $subtitleClasses }}">{{ $subtitle }}</p>
+        <p class="mt-3 text-[15px] text-gray-600 max-w-lg leading-relaxed {{ $subtitleClasses }}">{{ $subtitle }}</p>
     @endif
 </div>

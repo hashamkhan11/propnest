@@ -1,13 +1,14 @@
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
     <x-admin.page-header
-        title="Agent Subscription Plans"
+        kicker="Money"
+        title="Agent plans"
         icon="rectangle-stack"
         color="accent"
-        :subtitle="$plans->count() . ' ' . \Illuminate\Support\Str::plural('plan', $plans->count()) . ' · unlock listing capacity and featured credits for agents'"
+        :subtitle="$plans->count() . ' ' . \Illuminate\Support\Str::plural('plan', $plans->count()) . '. Plans raise an agent\'s listing cap and include featured credits.'"
     />
 
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6 mb-8">
-        <h2 class="font-heading font-700 text-lg text-gray-900 mb-4">{{ $editingId ? 'Edit Plan' : 'Add a New Plan' }}</h2>
+    <div class="bg-white rounded-xl border border-gray-900/10 p-4 sm:p-6 mb-8">
+        <h2 class="text-[15px] font-semibold text-primary-900 mb-4">{{ $editingId ? 'Edit plan' : 'New plan' }}</h2>
 
         <form wire:submit="save" class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-3 items-start">
             <div class="flex flex-col">
@@ -68,7 +69,7 @@
             @foreach ($plans as $index => $plan)
                 <div
                     wire:key="plan-{{ $plan->id }}"
-                    class="animate-fade-in-up relative bg-white rounded-2xl border shadow-sm hover:shadow-md transition-all p-5 sm:p-6 flex flex-col {{ $plan->is_active ? 'border-primary-100' : 'border-gray-100 opacity-70' }}"
+                    class="animate-fade-in-up relative bg-white rounded-xl border transition-all p-5 sm:p-6 flex flex-col {{ $plan->is_active ? 'border-gray-900/10' : 'border-gray-900/10 opacity-70' }}"
                     style="animation-delay: {{ min($index, 8) * 40 }}ms"
                 >
                     @if ($editingId === $plan->id)
@@ -79,11 +80,11 @@
 
                     <div class="flex-1">
                         <div class="flex items-start justify-between gap-2">
-                            <h3 class="font-heading font-700 text-lg text-gray-900">{{ $plan->name }}</h3>
+                            <h3 class="font-semibold text-lg text-gray-900">{{ $plan->name }}</h3>
                             <x-badge :variant="$plan->is_active ? 'success' : 'gray'" class="shrink-0">{{ $plan->is_active ? 'Active' : 'Inactive' }}</x-badge>
                         </div>
 
-                        <div class="mt-3 font-heading font-800 text-3xl text-primary-800">
+                        <div class="mt-3 font-semibold tracking-tight text-3xl text-primary-800">
                             <x-price :amount="$plan->price_cents / 100" />
                         </div>
 
@@ -101,7 +102,7 @@
                         </p>
                     </div>
 
-                    <div class="mt-5 pt-4 border-t border-gray-100 flex items-center gap-2">
+                    <div class="mt-5 pt-4 border-t border-gray-900/10 flex items-center gap-2">
                         <x-button type="button" variant="secondary" class="flex-1 justify-center" wire:click="startEdit({{ $plan->id }})">
                             Edit
                         </x-button>

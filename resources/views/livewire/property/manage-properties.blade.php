@@ -1,29 +1,25 @@
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="flex items-start justify-between gap-4 flex-wrap mb-6">
-        <div>
-            <h1 class="font-heading font-800 text-2xl sm:text-3xl text-gray-900">My Listings</h1>
-            <p class="text-gray-500 mt-1">{{ $properties->total() }} {{ \Illuminate\Support\Str::plural('listing', $properties->total()) }}</p>
-        </div>
-
-        <a href="{{ route('agent.properties.create') }}" wire:navigate>
-            <x-button>+ New Listing</x-button>
-        </a>
-    </div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+    <x-page-header kicker="Agent workspace" title="Your listings">
+        <x-slot:description>{{ $properties->total() }} {{ \Illuminate\Support\Str::plural('listing', $properties->total()) }}. New and edited listings are reviewed before they go live.</x-slot:description>
+        <x-slot:actions>
+            <a href="{{ route('agent.properties.create') }}" wire:navigate><x-button variant="accent">New listing</x-button></a>
+        </x-slot:actions>
+    </x-page-header>
 
     @if ($statuses !== [])
         <div class="flex items-center gap-2 mb-6">
-            <span class="inline-flex items-center gap-1.5 bg-primary-50 text-primary-800 border border-primary-100 text-sm font-medium pl-3 pr-1.5 py-1.5 rounded-full">
+            <span class="inline-flex items-center gap-1.5 bg-primary-50 text-primary-800 border border-gray-900/10 text-sm font-medium pl-3 pr-1.5 py-1.5 rounded-full">
                 {{ $this->filterLabel() }}
-                <button type="button" wire:click="clearFilter" class="w-4 h-4 rounded-full flex items-center justify-center hover:bg-primary-100 transition-colors" aria-label="Clear filter">&times;</button>
+                <button type="button" wire:click="clearFilter" class="w-4 h-4 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors" aria-label="Clear filter">&times;</button>
             </span>
         </div>
     @endif
 
     <div class="space-y-4">
         @forelse ($properties as $property)
-            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-primary-100 transition-all p-4 sm:p-5">
+            <div class="bg-white rounded-xl border border-gray-900/10 hover:border-gray-900/25 transition-all p-4 sm:p-5">
                 <div class="flex items-start gap-3 sm:gap-4">
-                    <div class="shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden bg-gray-100 ring-1 ring-gray-100">
+                    <div class="shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden bg-gray-100">
                         @if ($property->coverImage)
                             <img src="{{ \Illuminate\Support\Facades\Storage::url($property->coverImage->thumbnailDisplayPath()) }}" alt="{{ $property->title }}" class="w-full h-full object-cover">
                         @else
@@ -35,14 +31,14 @@
 
                     <div class="min-w-0 flex-1">
                         <div class="flex items-center gap-2 flex-wrap">
-                            <span class="font-heading font-700 text-gray-900 truncate">{{ $property->title }}</span>
+                            <span class="font-semibold text-gray-900 truncate">{{ $property->title }}</span>
                             <x-badge :variant="$property->status->badgeVariant()">
                                 {{ \Illuminate\Support\Str::headline($property->status->value) }}
                             </x-badge>
                         </div>
                         <p class="text-sm text-gray-500 mt-0.5">{{ ucfirst($property->property_type->value) }}</p>
-                        <p class="font-heading font-700 text-lg text-gray-900 mt-1">
-                            <x-price :amount="$property->price" />
+                        <p class="figure font-semibold text-lg text-primary-900 mt-1">
+                            <x-price whole :amount="$property->price" />
                         </p>
 
                         <div class="flex items-center gap-4 text-xs text-gray-500 mt-1.5">
@@ -68,7 +64,7 @@
 
                         <x-dropdown align="right" width="w-56">
                             <x-slot name="trigger">
-                                <button type="button" class="inline-flex items-center justify-center w-9 h-9 rounded-full border border-gray-200 text-gray-500 hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors" aria-label="More actions">
+                                <button type="button" class="inline-flex items-center justify-center w-9 h-9 rounded-md border border-gray-300 text-gray-500 hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-900 focus:ring-offset-2 transition-colors" aria-label="More actions">
                                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" /></svg>
                                 </button>
                             </x-slot>
@@ -104,7 +100,7 @@
                                     </button>
                                 @endforeach
 
-                                <div class="border-t border-gray-100 my-1"></div>
+                                <div class="border-t border-gray-900/10 my-1"></div>
 
                                 <button
                                     type="button"
@@ -127,7 +123,7 @@
                 @if ($property->status === \App\Enums\Property\PropertyStatus::Published)
                     @php($latestFeaturedPayment = $property->latestFeaturedPayment)
 
-                    <div class="mt-4 pt-4 border-t border-gray-100">
+                    <div class="mt-4 pt-4 border-t border-gray-900/10">
                         @if ($property->is_featured && $property->featured_until && $property->featured_until->isFuture())
                             {{-- Currently featured: status banner + any refund sub-state --}}
                             <div class="rounded-xl border border-accent-100 bg-accent-50/70 px-3 sm:px-4 py-3 flex items-center justify-between gap-3 flex-wrap">
@@ -135,7 +131,7 @@
                                     <x-icon.star class="w-4 h-4 text-accent-500" />
                                     Featured
                                     <span class="text-accent-600/70 font-normal">&middot; until {{ $property->featured_until->format('M j, Y') }}</span>
-                                    <span class="text-accent-600/70 font-normal hidden sm:inline">({{ now()->diffInDays($property->featured_until) }}d left)</span>
+                                    <span class="text-accent-600/70 font-normal hidden sm:inline">({{ max(1, (int) ceil(now()->diffInDays($property->featured_until))) }}d left)</span>
                                 </span>
 
                                 @php($featuredByPaidPayment = $latestFeaturedPayment && $latestFeaturedPayment->status === \App\Enums\Payment\PaymentStatus::Completed && $latestFeaturedPayment->featured_until?->equalTo($property->featured_until))
@@ -146,7 +142,7 @@
                                     @elseif ($requestingRefundPropertyId === $property->id)
                                         <div class="w-full space-y-2 text-left">
                                             <textarea wire:model="refundReason" rows="2" placeholder="Why are you requesting a refund?"
-                                                      class="border-gray-300 focus:border-primary-600 focus:ring-primary-600 rounded-md shadow-sm w-full text-sm"></textarea>
+                                                      class="border-gray-300 focus:border-primary-900 focus:ring-primary-900 rounded-md w-full text-sm"></textarea>
                                             <x-input-error :messages="$errors->get('refundReason')" />
                                             <div class="flex gap-2">
                                                 <x-button wire:click="submitRefundRequest({{ $property->id }})" wire:loading.attr="disabled" wire:target="submitRefundRequest">Submit Request</x-button>
@@ -202,14 +198,12 @@
                                 <x-badge variant="gray" class="mb-2">Refunded</x-badge>
                             @endif
 
-                            <div x-data="{ open: {{ $canUseCredit ? 'true' : 'false' }}, tierId: {{ $activeTiers->first()->id }} }" class="rounded-xl border border-gray-200 overflow-hidden">
+                            <div x-data="{ open: false, tierId: {{ $activeTiers->first()->id }} }" class="rounded-lg border border-gray-900/10 overflow-hidden">
                                 @if ($canUseCredit)
-                                    <div class="flex items-center justify-between gap-3 px-3 sm:px-4 py-3 bg-primary-50/60">
+                                    <div class="flex items-center justify-between gap-3 px-3 sm:px-4 py-3 bg-cream/60">
                                         <span class="inline-flex items-center gap-2 min-w-0">
-                                            <span class="shrink-0 w-6 h-6 rounded-full bg-primary-600 text-white flex items-center justify-center">
-                                                <x-icon.star class="w-3.5 h-3.5" />
-                                            </span>
-                                            <span class="text-sm font-semibold text-gray-800 truncate">Use Featured Credit ({{ $activeSubscription->featured_credits_remaining }} left)</span>
+                                            <x-icon.star class="w-4 h-4 shrink-0 text-accent-600" />
+                                            <span class="text-sm text-primary-900 truncate">Put it first in search <span class="text-gray-500">&middot; {{ $activeSubscription->featured_credits_remaining }} {{ \Illuminate\Support\Str::plural('credit', $activeSubscription->featured_credits_remaining) }} left</span></span>
                                         </span>
                                         <span class="inline-flex items-center gap-2 shrink-0">
                                             <button
@@ -223,29 +217,30 @@
                                                     confirmText: 'Use credit',
                                                     onConfirm: () =&gt; $wire.featureWithCredit({{ $property->id }}),
                                                 })"
-                                                class="inline-flex items-center px-3 py-1.5 rounded-full border border-primary-600 text-primary-700 text-[11px] font-bold tracking-wide uppercase hover:bg-primary-600 hover:text-white transition-colors"
+                                                class="inline-flex items-center px-3 py-1.5 rounded-md bg-primary-900 text-white text-[13px] font-medium hover:bg-primary-800 transition-colors"
                                             >
-                                                Use Credit
+                                                Use a credit
                                             </button>
-                                            <button type="button" @click="open = ! open" class="w-6 h-6 flex items-center justify-center text-gray-500 hover:text-gray-700" aria-label="Toggle featured plans">
+                                            <button type="button" @click="open = ! open" class="inline-flex items-center gap-1 px-2 py-1.5 text-[13px] text-gray-600 hover:text-primary-900" aria-label="Toggle featured plans">
+                                                <span>Or pay</span>
                                                 <svg class="w-4 h-4 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
                                             </button>
                                         </span>
                                     </div>
                                 @endif
 
-                                <div @if ($canUseCredit) x-show="open" x-transition class="border-t border-gray-200" @endif>
+                                <div @if ($canUseCredit) x-show="open" x-cloak x-transition class="border-t border-gray-900/10" @endif>
                                     <div class="p-3 sm:p-4 space-y-3">
                                         <div class="flex items-stretch gap-2">
                                             @foreach ($activeTiers as $tier)
                                                 <button
                                                     type="button"
                                                     @click="tierId = {{ $tier->id }}"
-                                                    :class="tierId === {{ $tier->id }} ? 'border-primary-600 bg-primary-50' : 'border-gray-200 hover:border-primary-300'"
+                                                    :class="tierId === {{ $tier->id }} ? 'border-primary-900 ring-1 ring-primary-900 bg-white' : 'border-gray-900/10 bg-white hover:border-gray-900/25'"
                                                     class="relative flex-1 min-w-0 border rounded-lg px-3 py-2 text-left transition-colors"
                                                 >
-                                                    <span class="block text-xs font-semibold text-gray-800 truncate pr-4">{{ $tier->name }} &middot; {{ $tier->duration_days }}d &middot; <x-price :amount="$tier->price_cents / 100" /></span>
-                                                    <svg x-show="tierId === {{ $tier->id }}" x-cloak class="absolute top-2 right-2 w-3.5 h-3.5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12.75l2.25 2.25 4.5-4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                                    <span class="block text-xs font-medium text-primary-900 truncate pr-4">{{ $tier->name }} &middot; {{ $tier->duration_days }}d &middot; <x-price :amount="$tier->price_cents / 100" /></span>
+                                                    <svg x-show="tierId === {{ $tier->id }}" x-cloak class="absolute top-2 right-2 w-3.5 h-3.5 text-primary-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12.75l2.25 2.25 4.5-4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                                 </button>
                                             @endforeach
                                         </div>
@@ -265,7 +260,7 @@
                                         >
                                             <span wire:loading.remove wire:target="feature" class="inline-flex items-center gap-1.5">
                                                 <x-icon.star class="w-3.5 h-3.5" />
-                                                Feature Listing
+                                                Feature it
                                             </span>
                                             <span wire:loading wire:target="feature" class="inline-flex items-center gap-1.5">
                                                 <svg class="animate-spin w-3.5 h-3.5" viewBox="0 0 24 24" fill="none"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/></svg>

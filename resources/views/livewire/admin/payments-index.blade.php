@@ -1,6 +1,7 @@
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
     <x-admin.page-header
-        title="Payments & Refunds"
+        kicker="Money"
+        title="Payments"
         icon="banknotes"
         :subtitle="$payments->total() . ' ' . \Illuminate\Support\Str::plural('payment', $payments->total()) . ' for featured listings'"
     />
@@ -41,10 +42,10 @@
         <div class="md:hidden space-y-3">
             @foreach ($payments as $payment)
                 @php($featuredUntilDisplay = $payment->featured_until ?? (($payment->agentSubscription && $payment->agentSubscription->plan?->featured_credits > 0) ? $payment->agentSubscription->expires_at : null))
-                <div wire:key="payment-card-{{ $payment->id }}" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
+                <div wire:key="payment-card-{{ $payment->id }}" class="bg-white rounded-xl border border-gray-900/10 p-4">
                     <div class="flex items-start justify-between gap-2">
                         <div class="min-w-0">
-                            <p class="font-heading font-700 text-gray-900 truncate">{{ $payment->property->title ?? $payment->agentSubscription?->plan?->name ?? '—' }}</p>
+                            <p class="font-semibold text-gray-900 truncate">{{ $payment->property->title ?? $payment->agentSubscription?->plan?->name ?? '—' }}</p>
                             <p class="text-sm text-gray-500 truncate">{{ $payment->agent->name }}</p>
                         </div>
                         <x-badge :variant="$payment->status->badgeVariant()" class="shrink-0">
@@ -61,7 +62,7 @@
                         <span class="text-gray-700 text-right">{{ $payment->created_at->format('M j, Y') }}</span>
                     </div>
 
-                    <div class="mt-4 pt-3 border-t border-gray-100 flex justify-end">
+                    <div class="mt-4 pt-3 border-t border-gray-900/10 flex justify-end">
                         @include('livewire.admin.partials.payment-actions', ['payment' => $payment])
                     </div>
                 </div>

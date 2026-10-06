@@ -1,18 +1,7 @@
-<div>
-    <div class="flex items-center gap-3 mb-6">
-        <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center shrink-0">
-            <x-icon.mail class="w-6 h-6" />
-        </div>
-        <div>
-            <h1 class="font-heading font-800 text-2xl sm:text-3xl text-gray-900">Inquiries</h1>
-            <p class="text-gray-500 mt-0.5">
-                {{ $inquiries->total() }} {{ Str::plural('inquiry', $inquiries->total()) }}
-                @if (count($unreadIds) > 0)
-                    &middot; <span class="text-primary-700 font-semibold">{{ count($unreadIds) }} new</span>
-                @endif
-            </p>
-        </div>
-    </div>
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+    <x-page-header kicker="Inbox" title="Inquiries">
+        <x-slot:description>{{ $inquiries->total() }} {{ Str::plural('message', $inquiries->total()) }} from buyers. @if (count($unreadIds) > 0)<span class="text-primary-900 font-medium">{{ count($unreadIds) }} waiting on you.</span> @endif A quick reply wins viewings.</x-slot:description>
+    </x-page-header>
 
     @if ($inquiries->isEmpty())
         <x-empty-state title="No inquiries yet" description="When a buyer messages you about one of your listings, it'll show up here.">
@@ -28,14 +17,14 @@
                         $isUnread = in_array($inquiry->id, $unreadIds);
                     @endphp
                     <div
-                        class="animate-fade-in-up bg-white rounded-2xl border {{ $isUnread ? 'border-primary-200' : 'border-gray-100' }} shadow-sm hover:shadow-md hover:border-primary-100 transition-all p-4 sm:p-5"
+                        class="animate-fade-in-up bg-white rounded-xl border {{ $isUnread ? 'border-accent-500/40' : 'border-gray-900/10' }} hover:border-gray-900/25 transition-all p-4 sm:p-5"
                         style="animation-delay: {{ min($index, 8) * 40 }}ms"
                         wire:loading.class="opacity-40 pointer-events-none"
                         wire:target="sendReply({{ $inquiry->id }})"
                     >
                         <div class="flex items-start gap-3 sm:gap-4">
                             <div class="relative shrink-0">
-                                <x-user-avatar :user="$inquiry->buyer" size="w-11 h-11 sm:w-12 sm:h-12" textClass="font-heading font-700" />
+                                <x-user-avatar :user="$inquiry->buyer" size="w-11 h-11 sm:w-12 sm:h-12" textClass="font-semibold" />
                                 @if ($isUnread)
                                     <span class="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-accent-500 ring-2 ring-white"></span>
                                 @endif
@@ -45,7 +34,7 @@
                                 <div class="flex items-start justify-between gap-3 flex-wrap">
                                     <div class="min-w-0">
                                         <div class="flex items-center gap-2 flex-wrap">
-                                            <span class="font-heading font-700 text-gray-900">{{ $inquiry->buyer->name }}</span>
+                                            <span class="font-semibold text-gray-900">{{ $inquiry->buyer->name }}</span>
                                             @if ($isUnread)
                                                 <x-badge variant="accent">New</x-badge>
                                             @elseif ($inquiry->replied_at)
@@ -54,7 +43,7 @@
                                                 <x-badge variant="warning">Awaiting reply</x-badge>
                                             @endif
                                         </div>
-                                        <a href="{{ route('properties.show', $inquiry->property) }}" wire:navigate class="inline-flex items-center gap-1 text-sm text-primary-700 hover:text-primary-800 hover:underline mt-0.5 truncate">
+                                        <a href="{{ route('properties.show', $inquiry->property) }}" wire:navigate class="inline-flex items-center gap-1 text-sm text-primary-900 hover:text-primary-800 hover:underline mt-0.5 truncate">
                                             <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /></svg>
                                             <span class="truncate">{{ $inquiry->property->title }}</span>
                                         </a>
@@ -68,23 +57,23 @@
 
                                 <p class="mt-2 text-xs text-gray-400 flex items-center gap-1">
                                     <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" /></svg>
-                                    <a href="mailto:{{ $inquiry->buyer->email }}" class="hover:text-primary-600 hover:underline">{{ $inquiry->buyer->email }}</a>
+                                    <a href="mailto:{{ $inquiry->buyer->email }}" class="hover:text-accent-700 hover:underline">{{ $inquiry->buyer->email }}</a>
                                 </p>
 
                                 @if ($inquiry->replied_at)
                                     <div class="mt-3 flex justify-end">
-                                        <div class="max-w-[85%] bg-primary-600 text-white rounded-xl rounded-tr-sm px-4 py-3">
+                                        <div class="max-w-[85%] bg-primary-900 text-white rounded-xl rounded-tr-sm px-4 py-3">
                                             <p class="text-xs text-primary-100 mb-1">Your reply &middot; {{ $inquiry->replied_at->diffForHumans() }}</p>
                                             <p class="text-sm whitespace-pre-line">{{ $inquiry->reply }}</p>
                                         </div>
                                     </div>
                                 @elseif ($replyingId === $inquiry->id)
-                                    <div class="mt-3 border border-gray-100 rounded-xl p-3 bg-white">
+                                    <div class="mt-3 border border-gray-900/10 rounded-xl p-3 bg-white">
                                         <textarea
                                             wire:model="replyMessage"
                                             rows="3"
                                             maxlength="2000"
-                                            class="w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-600 focus:ring-primary-600 text-sm resize-none"
+                                            class="w-full rounded-lg border-gray-300 focus:border-primary-900 focus:ring-primary-900 text-sm resize-none"
                                             placeholder="Write your reply&hellip;"
                                             wire:loading.attr="disabled"
                                             wire:target="sendReply({{ $inquiry->id }})"

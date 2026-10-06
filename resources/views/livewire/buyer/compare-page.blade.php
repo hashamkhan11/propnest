@@ -1,25 +1,24 @@
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <h1 class="font-heading font-800 text-2xl sm:text-3xl text-gray-900 mb-1">Compare Properties</h1>
-    <p class="text-gray-500 mb-6">See your shortlisted listings side by side.</p>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+    <x-page-header kicker="Compare" title="Side by side" description="Up to three homes, every detail in one table. The best value in each row is easy to spot." />
 
     @if ($properties->isEmpty())
         <x-empty-state
             title="You haven't selected any properties to compare yet"
-            description="Add listings to compare from the Browse Listings page."
+            description="Use the compare button on any listing to add it here."
         >
             <x-slot name="icon">
                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3v1.5M3 21v-6M21 21v-1.5M21 3v6M3 4.5h18M3 19.5h18M8 8v8M16 8v8" /></svg>
             </x-slot>
             <x-slot name="actions">
                 <a href="{{ route('properties.index') }}" wire:navigate>
-                    <x-button type="button">Browse Properties</x-button>
+                    <x-button type="button">Browse homes</x-button>
                 </a>
             </x-slot>
         </x-empty-state>
     @else
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
             @foreach ($properties as $property)
-                <div class="flex flex-col bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all overflow-hidden">
+                <div class="flex flex-col bg-white rounded-xl border border-gray-900/10 transition-all overflow-hidden">
                     <div class="aspect-[4/3] bg-gray-100">
                         @if ($property->coverImage)
                             <img src="{{ \Illuminate\Support\Facades\Storage::url($property->coverImage->thumbnailDisplayPath()) }}" alt="{{ $property->title }}" class="w-full h-full object-cover">
@@ -31,14 +30,14 @@
                     </div>
 
                     <div class="flex flex-col flex-1 p-4">
-                        <div class="font-heading font-700 text-xl text-primary-800">
-                            <x-price :amount="$property->price" />
+                        <div class="font-semibold text-xl text-primary-800">
+                            <x-price whole :amount="$property->price" />
                             @if ($property->purpose === \App\Enums\Property\PropertyPurpose::ForRent)
-                                <span class="text-sm font-500 text-gray-500">/mo</span>
+                                <span class="text-sm font-medium text-gray-500">/mo</span>
                             @endif
                         </div>
 
-                        <a href="{{ route('properties.show', $property) }}" wire:navigate class="mt-1 font-heading font-600 text-gray-900 hover:text-primary-600 truncate">
+                        <a href="{{ route('properties.show', $property) }}" wire:navigate class="mt-1 font-semibold text-gray-900 hover:text-accent-700 truncate">
                             {{ $property->title }}
                         </a>
 
@@ -50,7 +49,7 @@
                             <span class="truncate">{{ $property->address }}, {{ $property->city }}</span>
                         </div>
 
-                        <div class="mt-3 pt-3 border-t border-gray-100 flex items-center gap-4 text-sm text-gray-500">
+                        <div class="mt-3 pt-3 border-t border-gray-900/10 flex items-center gap-4 text-sm text-gray-500">
                             <span class="flex items-center gap-1.5">
                                 <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 18v-6a2 2 0 012-2h14a2 2 0 012 2v6M3 18v2M3 18h18m0 0v2M5 10V7a2 2 0 012-2h2a2 2 0 012 2v3M13 10V8a2 2 0 012-2h2a2 2 0 012 2v2" />
@@ -85,7 +84,7 @@
 
                         <p class="mt-1 text-xs text-gray-400">Listed {{ $property->created_at->format('M j, Y') }}</p>
 
-                        <div class="mt-4 pt-4 border-t border-gray-100 flex flex-col items-stretch gap-2 mt-auto">
+                        <div class="mt-4 pt-4 border-t border-gray-900/10 flex flex-col items-stretch gap-2 mt-auto">
                             <a href="{{ route('properties.show', $property) }}" wire:navigate>
                                 <x-button type="button" variant="secondary" class="w-full justify-center">View Details</x-button>
                             </a>
@@ -103,7 +102,7 @@
                 <button
                     type="button"
                     x-on:click="open = !open"
-                    class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-gray-200 bg-white text-gray-700 font-600 text-sm hover:bg-gray-50 hover:border-primary-200 transition-colors shadow-sm"
+                    class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-gray-200 bg-white text-gray-700 font-semibold text-sm hover:bg-gray-50 hover:border-gray-900/25 transition-colors"
                 >
                     Compare Features
                     <svg class="w-4 h-4 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -121,12 +120,12 @@
                 x-transition:leave="transition ease-in duration-150"
                 x-transition:leave-start="opacity-100 translate-y-0"
                 x-transition:leave-end="opacity-0 -translate-y-1"
-                class="mt-6 overflow-x-auto bg-white rounded-2xl border border-gray-100 shadow-sm"
+                class="mt-6 overflow-x-auto bg-white rounded-xl border border-gray-900/10"
             >
                 <table class="w-full border-collapse">
-                    <tbody class="divide-y divide-gray-100 [&>tr:hover]:bg-gray-50/60">
+                    <tbody class="divide-y divide-gray-900/10 [&>tr:hover]:bg-gray-50/60">
                         <tr>
-                            <td class="p-4 font-600 text-gray-500 w-40">Type</td>
+                            <td class="p-4 font-semibold text-gray-500 w-40">Type</td>
                             @foreach ($properties as $property)
                                 <td class="p-4 text-gray-700">
                                     {{ $property->property_type->name }} &middot;
@@ -136,11 +135,11 @@
                         </tr>
                         @foreach ($amenityNames as $amenityName)
                             <tr>
-                                <td class="p-4 font-600 text-gray-500">{{ $amenityName }}</td>
+                                <td class="p-4 font-semibold text-gray-500">{{ $amenityName }}</td>
                                 @foreach ($properties as $property)
                                     <td class="p-4">
                                         @if ($property->amenities->contains('name', $amenityName))
-                                            <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                                            <svg class="w-5 h-5 text-primary-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.5 12.75l6 6 9-13.5" /></svg>
                                         @else
                                             <svg class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                                         @endif

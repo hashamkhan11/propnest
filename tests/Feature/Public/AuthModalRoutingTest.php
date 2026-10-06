@@ -13,7 +13,7 @@ class AuthModalRoutingTest extends TestCase
 {
     use RefreshDatabase;
 
-    private const HOMEPAGE_MARKER = 'Find your next home,';
+    private const HOMEPAGE_MARKER = 'Find a place';
 
     public function test_login_url_renders_the_homepage_with_the_login_modal_open(): void
     {

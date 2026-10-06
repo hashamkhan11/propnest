@@ -1,13 +1,14 @@
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
     <x-admin.page-header
-        title="User Management"
+        kicker="People"
+        title="Users"
         icon="users"
         :subtitle="$users->total() . ' ' . \Illuminate\Support\Str::plural('user', $users->total())"
     >
         @if (auth()->user()->role === \App\Enums\User\UserRole::SuperAdmin)
             <x-slot name="actions">
                 <a href="{{ route('admin.create-admin') }}" wire:navigate>
-                    <x-button>Create Admin</x-button>
+                    <x-button>Add an admin</x-button>
                 </a>
             </x-slot>
         @endif
@@ -17,14 +18,14 @@
         <div class="flex flex-col sm:flex-row gap-3">
             <x-input wire:model.live.debounce.400ms="search" type="text" placeholder="Search name or email…" class="sm:max-w-xs" />
 
-            <select wire:model.live="roleFilter" class="border-gray-300 focus:border-primary-600 focus:ring-primary-600 rounded-md shadow-sm">
+            <select wire:model.live="roleFilter" class="border-gray-300 focus:border-primary-900 focus:ring-primary-900 rounded-md">
                 <option value="">All roles</option>
                 @foreach ($roles as $role)
                     <option value="{{ $role->value }}">{{ $role->label() }}</option>
                 @endforeach
             </select>
 
-            <select wire:model.live="statusFilter" class="border-gray-300 focus:border-primary-600 focus:ring-primary-600 rounded-md shadow-sm">
+            <select wire:model.live="statusFilter" class="border-gray-300 focus:border-primary-900 focus:ring-primary-900 rounded-md">
                 <option value="">All statuses</option>
                 @foreach ($statuses as $status)
                     <option value="{{ $status->value }}">{{ $status->label() }}</option>
@@ -69,7 +70,7 @@
                                 @elseif ($suspendingUserId === $user->id)
                                     <div class="space-y-2 text-left">
                                         <textarea wire:model="suspensionReason" rows="2" placeholder="Reason (required)"
-                                                  class="border-gray-300 focus:border-primary-600 focus:ring-primary-600 rounded-md shadow-sm w-full text-sm"></textarea>
+                                                  class="border-gray-300 focus:border-primary-900 focus:ring-primary-900 rounded-md w-full text-sm"></textarea>
                                         <x-input-error :messages="$errors->get('suspensionReason')" />
                                         <div class="flex gap-2">
                                             <x-button wire:click="suspend({{ $user->id }})">Confirm Suspend</x-button>
@@ -97,10 +98,10 @@
         {{-- Mobile card list --}}
         <div class="md:hidden space-y-3">
             @foreach ($users as $user)
-                <div wire:key="user-card-{{ $user->id }}" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
+                <div wire:key="user-card-{{ $user->id }}" class="bg-white rounded-xl border border-gray-900/10 p-4">
                     <div class="flex items-start justify-between gap-2">
                         <div class="min-w-0">
-                            <p class="font-heading font-700 text-gray-900 truncate">{{ $user->name }}</p>
+                            <p class="font-semibold text-gray-900 truncate">{{ $user->name }}</p>
                             <p class="text-sm text-gray-500 truncate">{{ $user->email }}</p>
                         </div>
                         <x-badge :variant="$user->role->badgeVariant()" class="shrink-0">{{ $user->role->label() }}</x-badge>
@@ -115,7 +116,7 @@
                         <p class="text-xs text-gray-500 mt-2">{{ $user->suspension_reason }}</p>
                     @endif
 
-                    <div class="mt-4 pt-3 border-t border-gray-100 space-y-2">
+                    <div class="mt-4 pt-3 border-t border-gray-900/10 space-y-2">
                         @php
                             $isSuperAdmin = auth()->user()->role === \App\Enums\User\UserRole::SuperAdmin;
                             $targetIsSuperAdmin = $user->role === \App\Enums\User\UserRole::SuperAdmin;
@@ -128,7 +129,7 @@
                             @elseif ($suspendingUserId === $user->id)
                                 <div class="space-y-2">
                                     <textarea wire:model="suspensionReason" rows="2" placeholder="Reason (required)"
-                                              class="border-gray-300 focus:border-primary-600 focus:ring-primary-600 rounded-md shadow-sm w-full text-sm"></textarea>
+                                              class="border-gray-300 focus:border-primary-900 focus:ring-primary-900 rounded-md w-full text-sm"></textarea>
                                     <x-input-error :messages="$errors->get('suspensionReason')" />
                                     <div class="flex gap-2">
                                         <x-button wire:click="suspend({{ $user->id }})" class="flex-1 justify-center">Confirm</x-button>

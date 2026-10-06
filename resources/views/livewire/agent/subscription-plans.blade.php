@@ -1,32 +1,26 @@
-<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <h1 class="font-heading font-800 text-2xl text-gray-900 mb-1">Agent Subscriptions</h1>
-    <p class="text-gray-500 mb-6">Subscribe to unlock more active listings and bundled featured credits.</p>
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+    <x-page-header kicker="Plans" title="Room to grow" description="More active listings and featured credits each month. Cancel any time, keep what you have published." />
 
-    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 sm:p-6 mb-8">
-        <h2 class="font-heading font-700 text-lg text-gray-900 mb-4">Your Status</h2>
-
-        <div class="flex flex-wrap items-center gap-4 bg-gray-50 rounded-xl px-4 py-3 mb-4">
-            <div class="shrink-0">
-                <p class="font-heading font-800 text-2xl text-gray-900">{{ $activeListingCount }}</p>
-                <p class="text-xs text-gray-500">active listings</p>
+    <section class="mb-12">
+        <h2 class="kicker mb-4">Where you stand</h2>
+        <dl class="grid grid-cols-3 gap-px bg-gray-900/10 border-y border-gray-900/10 mb-4">
+            <div class="bg-cream py-5 pr-4">
+                <dt class="text-sm text-gray-600">Active listings</dt>
+                <dd class="figure text-3xl font-semibold tracking-tight text-primary-900 mt-1">{{ $activeListingCount }}</dd>
             </div>
-            <div class="h-8 w-px bg-gray-200"></div>
-            <div class="shrink-0">
-                <p class="font-heading font-800 text-2xl text-gray-900">
-                    {{ $activeSubscription->listing_limit ?? ($activeSubscription ? '∞' : ($freeListingLimit ?? '∞')) }}
-                </p>
-                <p class="text-xs text-gray-500">listing limit</p>
+            <div class="bg-cream py-5 px-4">
+                <dt class="text-sm text-gray-600">Listing limit</dt>
+                <dd class="figure text-3xl font-semibold tracking-tight text-primary-900 mt-1">{{ $activeSubscription->listing_limit ?? ($activeSubscription ? '∞' : ($freeListingLimit ?? '∞')) }}</dd>
             </div>
-            <div class="h-8 w-px bg-gray-200"></div>
-            <div class="shrink-0">
-                <p class="font-heading font-800 text-2xl text-gray-900">{{ $activeSubscription->featured_credits_remaining ?? 0 }}</p>
-                <p class="text-xs text-gray-500">featured credits left</p>
+            <div class="bg-cream py-5 px-4">
+                <dt class="text-sm text-gray-600">Featured credits left</dt>
+                <dd class="figure text-3xl font-semibold tracking-tight text-primary-900 mt-1">{{ $activeSubscription->featured_credits_remaining ?? 0 }}</dd>
             </div>
-        </div>
+        </dl>
 
         @if ($activeSubscription)
-            <div class="flex items-center gap-2 text-sm text-primary-800 bg-primary-50 border border-primary-100 rounded-lg px-3 py-2">
-                <x-icon.check-circle class="w-4 h-4 shrink-0" />
+            <div class="flex items-center gap-2 text-sm text-primary-900">
+                <x-icon.check-circle class="w-4 h-4 shrink-0 text-emerald-700" />
                 <span>
                     Subscribed to <span class="font-semibold">{{ $activeSubscription->plan->name }}</span>
                     until {{ $activeSubscription->expires_at->format('M j, Y') }}.
@@ -47,7 +41,7 @@
                 </x-button>
             </div>
         @endif
-    </div>
+    </section>
 
     @if ($plans->isEmpty())
         <x-empty-state
@@ -61,12 +55,16 @@
     @else
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             @foreach ($plans as $plan)
-                <div wire:key="plan-{{ $plan->id }}" class="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all p-5 sm:p-6 flex flex-col">
+                @php($isCurrent = $activeSubscription && $activeSubscription->subscription_plan_id === $plan->id)
+                <div wire:key="plan-{{ $plan->id }}" class="relative bg-white rounded-xl border {{ $isCurrent ? 'border-primary-900 ring-1 ring-primary-900' : 'border-gray-900/10' }} p-5 sm:p-6 flex flex-col">
+                    @if ($isCurrent)
+                        <span class="absolute -top-2.5 left-5 kicker !text-white bg-primary-900 rounded px-2 py-0.5">Your plan</span>
+                    @endif
                     <div class="flex-1">
-                        <h3 class="font-heading font-700 text-lg text-gray-900">{{ $plan->name }}</h3>
+                        <h3 class="font-semibold text-lg text-primary-900">{{ $plan->name }}</h3>
 
-                        <div class="mt-3 font-heading font-800 text-3xl text-primary-800">
-                            <x-price :amount="$plan->price_cents / 100" />
+                        <div class="mt-3 figure font-semibold tracking-tight text-4xl text-primary-900">
+                            <x-price whole :amount="$plan->price_cents / 100" />
                         </div>
 
                         <p class="text-sm text-gray-500 mt-1 flex items-center gap-1.5">
@@ -83,9 +81,10 @@
                         </p>
                     </div>
 
-                    <div class="mt-5 pt-4 border-t border-gray-100">
+                    <div class="mt-5 pt-4 border-t border-gray-900/10">
                         <x-button
                             type="button"
+                            :variant="$activeSubscription ? 'secondary' : 'primary'"
                             class="w-full justify-center"
                             wire:loading.attr="disabled"
                             wire:target="subscribe"
@@ -97,7 +96,7 @@
                                 onConfirm: () =&gt; $wire.subscribe({{ $plan->id }}),
                             })"
                         >
-                            <span wire:loading.remove wire:target="subscribe">Subscribe</span>
+                            <span wire:loading.remove wire:target="subscribe">{{ $isCurrent ? 'Current plan' : ($activeSubscription ? 'Available when this one ends' : 'Choose '.$plan->name) }}</span>
                             <span wire:loading wire:target="subscribe" class="inline-flex items-center gap-1.5">
                                 <svg class="animate-spin w-3.5 h-3.5" viewBox="0 0 24 24" fill="none"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/></svg>
                                 Redirecting&hellip;

@@ -1,10 +1,10 @@
 @php use Illuminate\Support\Str; @endphp
 
 <div>
-    <h1 class="font-heading text-2xl md:text-3xl font-semibold text-primary-900 mb-2">
+    <h1 class="display text-[2.5rem] mb-2">
         Welcome, {{ Str::of($pendingName)->before(' ') }}!
     </h1>
-    <p class="text-sm text-gray-600 mb-8">How will you use PropNest? We just need to know this once — you can always update it later.</p>
+    <p class="text-[15px] text-gray-600 mb-8 leading-relaxed">One quick question: are you here to find a home, or to list them? You only answer this once.</p>
 
     <form wire:submit="continue">
         <x-role-selector name="role" :value="$role" />
@@ -12,7 +12,7 @@
 
         <p class="text-xs text-gray-500 mt-4">
             Signing up as <span class="font-medium text-gray-700">{{ $pendingEmail }}</span>.
-            <button type="button" wire:click="cancel" class="text-primary-600 hover:text-primary-800 underline">Not you? Use a different account</button>
+            <button type="button" wire:click="cancel" class="text-primary-900 link-underline">Not you? Use a different account</button>
         </p>
 
         <x-button class="w-full justify-center mt-6" wire:loading.attr="disabled" wire:target="continue">

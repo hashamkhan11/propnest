@@ -5,7 +5,9 @@ namespace App\Livewire\Admin;
 use App\Enums\Payment\PaymentStatus;
 use App\Enums\Property\PropertyStatus;
 use App\Enums\Report\ReportStatus;
+use App\Enums\User\AgentVerificationStatus;
 use App\Enums\User\UserRole;
+use App\Models\AgentProfile;
 use App\Models\Payment;
 use App\Models\Property;
 use App\Models\Report;
@@ -26,6 +28,7 @@ class Dashboard extends Component
             'pendingReportsCount' => Report::where('status', ReportStatus::Pending)->count(),
             'totalProperties' => Property::count(),
             'featuredCount' => Property::where('is_featured', true)->where('featured_until', '>', now())->count(),
+            'pendingAgentsCount' => AgentProfile::where('verification_status', AgentVerificationStatus::Pending)->count(),
             'pendingReviewCount' => Property::where('status', PropertyStatus::PendingReview)->count(),
             'revenue' => Payment::where('status', PaymentStatus::Completed)->sum('amount') / 100,
             'recentPayments' => Payment::with(['agent', 'property'])->latest()->take(5)->get(),

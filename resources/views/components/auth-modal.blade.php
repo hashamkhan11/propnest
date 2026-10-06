@@ -67,7 +67,7 @@
         x-transition:leave="transition ease-in duration-150"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
-        class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
+        class="fixed inset-0 z-50 bg-primary-900/50 backdrop-blur-[2px]"
         @click="closeModal()"
     ></div>
 
@@ -80,7 +80,7 @@
             x-transition:leave="transition ease-in duration-150"
             x-transition:leave-start="opacity-100 scale-100"
             x-transition:leave-end="opacity-0 scale-95"
-            class="relative w-full max-w-md max-h-[90vh] overflow-y-auto bg-white rounded-2xl shadow-2xl shadow-primary-900/10 ring-1 ring-black/5 p-8 sm:p-10 pointer-events-auto"
+            class="relative w-full max-w-md max-h-[90vh] overflow-y-auto bg-white rounded-xl shadow-2xl ring-1 ring-gray-900/10 p-8 sm:p-10 pointer-events-auto"
             role="dialog"
             aria-modal="true"
             @click.outside="closeModal()"
