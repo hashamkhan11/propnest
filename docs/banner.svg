@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" font-family="Geist, 'Segoe UI', Inter, Roboto, Arial, sans-serif">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Geist:wght@400;600;700&amp;family=Geist+Mono&amp;display=swap');
+      .serif { font-family: 'Instrument Serif', Georgia, 'Times New Roman', serif; }
+      .mono { font-family: 'Geist Mono', Consolas, monospace; }
+    </style>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#2A1E14" flood-opacity="0.18"/>
+    </filter>
+    <clipPath id="mapclip"><rect width="420" height="430" rx="18"/></clipPath>
+    <clipPath id="thumbclip"><rect width="244" height="132" rx="10"/></clipPath>
+  </defs>
+
+  <rect width="1280" height="640" fill="#F6F4EF"/>
+
+  <!-- left: brand and headline -->
+  <g transform="translate(96 0)">
+    <g transform="translate(0 92)">
+      <rect width="40" height="40" rx="9" fill="#141414"/>
+      <path d="M11 24 L20 15 L29 24" stroke="#FFFFFF" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M15 29 L20 24 L25 29" stroke="#C95B2C" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="52" y="29" font-size="26" font-weight="700" letter-spacing="-0.5"><tspan fill="#141414">prop</tspan><tspan fill="#C95B2C">nest</tspan></text>
+    </g>
+
+    <circle cx="4" cy="187" r="4" fill="#C95B2C"/>
+    <text x="16" y="192" class="mono" fill="#5C574F" font-size="14" letter-spacing="2.5">REAL ESTATE MARKETPLACE</text>
+
+    <text class="serif" fill="#141414" font-size="80" letter-spacing="-1.5">
+      <tspan x="0" y="270">Find a place that</tspan>
+      <tspan x="0" y="350">feels like <tspan fill="#C95B2C" font-style="italic">yours.</tspan></tspan>
+    </text>
+
+    <text x="2" y="408" fill="#4A463F" font-size="21">
+      <tspan x="2" dy="0">Verified listings, map search and agent subscriptions,</tspan>
+      <tspan x="2" dy="31">with Stripe payments and an admin console.</tspan>
+    </text>
+
+    <g font-size="17" font-weight="600" fill="#141414">
+      <rect x="2" y="470" width="114" height="36" rx="18" fill="none" stroke="#D9D4CA"/>
+      <text x="59" y="494" text-anchor="middle">Laravel 13</text>
+      <rect x="128" y="470" width="104" height="36" rx="18" fill="none" stroke="#D9D4CA"/>
+      <text x="180" y="494" text-anchor="middle">Livewire</text>
+      <rect x="244" y="470" width="84" height="36" rx="18" fill="none" stroke="#D9D4CA"/>
+      <text x="286" y="494" text-anchor="middle">Stripe</text>
+      <rect x="340" y="470" width="98" height="36" rx="18" fill="none" stroke="#D9D4CA"/>
+      <text x="389" y="494" text-anchor="middle">Leaflet</text>
+    </g>
+  </g>
+
+  <!-- map -->
+  <g transform="translate(780 104)" filter="url(#shadow)">
+    <g clip-path="url(#mapclip)">
+      <rect width="420" height="430" fill="#ECE8DF"/>
+      <!-- park and water -->
+      <path d="M0 300 C 80 280, 120 340, 200 330 S 330 370, 420 350 V 430 H 0 Z" fill="#D7E3E8"/>
+      <rect x="250" y="40" width="120" height="90" rx="14" fill="#DCE5D2"/>
+      <!-- streets -->
+      <g stroke="#FFFFFF" stroke-linecap="round">
+        <path d="M-10 90 L 430 130" stroke-width="10"/>
+        <path d="M-10 220 L 430 200" stroke-width="12"/>
+        <path d="M120 -10 L 150 440" stroke-width="10"/>
+        <path d="M300 -10 L 260 440" stroke-width="8"/>
+        <path d="M40 -10 L 60 300" stroke-width="5"/>
+        <path d="M-10 160 L 430 165" stroke-width="5"/>
+        <path d="M200 -10 L 215 300" stroke-width="5"/>
+        <path d="M-10 270 L 430 260" stroke-width="5"/>
+      </g>
+      <!-- radius search -->
+      <circle cx="210" cy="175" r="92" fill="#C95B2C" fill-opacity="0.08" stroke="#C95B2C" stroke-width="2" stroke-dasharray="6 6"/>
+      <!-- pins -->
+      <g font-size="13" font-weight="700" text-anchor="middle">
+        <circle cx="180" cy="140" r="17" fill="#141414"/><text x="180" y="145" fill="#FFFFFF">12</text>
+        <circle cx="258" cy="205" r="14" fill="#141414"/><text x="258" y="210" fill="#FFFFFF">5</text>
+        <circle cx="70" cy="245" r="12" fill="#141414" fill-opacity="0.75"/><text x="70" y="250" fill="#FFFFFF" font-size="11">3</text>
+        <circle cx="360" cy="270" r="12" fill="#141414" fill-opacity="0.75"/><text x="360" y="275" fill="#FFFFFF" font-size="11">4</text>
+      </g>
+      <!-- price pin -->
+      <g transform="translate(170 200)">
+        <rect x="-46" y="-16" width="92" height="30" rx="15" fill="#C95B2C"/>
+        <path d="M-6 14 L0 22 L6 14 Z" fill="#C95B2C"/>
+        <text x="0" y="4" text-anchor="middle" fill="#FFFFFF" font-size="14" font-weight="700">$670k</text>
+      </g>
+    </g>
+    <!-- search pill -->
+    <rect x="16" y="16" width="230" height="40" rx="10" fill="#FFFFFF" stroke="#E4DFD5"/>
+    <circle cx="36" cy="34" r="6" fill="none" stroke="#8A847A" stroke-width="2"/>
+    <path d="M40.5 38.5 L45 43" stroke="#8A847A" stroke-width="2" stroke-linecap="round"/>
+    <text x="54" y="41" fill="#8A847A" font-size="14">Within 5 km of Denver</text>
+  </g>
+
+  <!-- listing card -->
+  <g transform="translate(700 320)" filter="url(#shadow)">
+    <rect width="270" height="250" rx="14" fill="#FFFFFF"/>
+    <g transform="translate(13 13)">
+      <g clip-path="url(#thumbclip)">
+        <rect width="244" height="132" fill="#B9C3DE"/>
+        <rect y="60" width="244" height="72" fill="#C9CEDF"/>
+        <!-- house -->
+        <rect x="58" y="62" width="128" height="62" fill="#3E4A73"/>
+        <path d="M48 66 L122 22 L196 66 Z" fill="#2A3357"/>
+        <rect x="76" y="78" width="22" height="18" fill="#F6C46A"/>
+        <rect x="146" y="78" width="22" height="18" fill="#F6C46A"/>
+        <rect x="111" y="92" width="22" height="32" fill="#1E2542"/>
+        <rect y="122" width="244" height="10" fill="#9AA3BE"/>
+      </g>
+      <rect x="10" y="10" width="78" height="24" rx="12" fill="#C95B2C"/>
+      <text x="49" y="27" text-anchor="middle" class="mono" fill="#FFFFFF" font-size="11" letter-spacing="1">FEATURED</text>
+    </g>
+    <text x="16" y="172" fill="#141414" font-size="16" font-weight="700">Renovated 5-bed home</text>
+    <text x="16" y="194" fill="#5C574F" font-size="13">Denver · 5 bd · 4 ba · 3,200 sq ft</text>
+    <line x1="16" y1="210" x2="254" y2="210" stroke="#EEEAE2"/>
+    <text x="16" y="236" class="serif" fill="#141414" font-size="26">$670,000</text>
+    <circle cx="232" cy="229" r="10" fill="#E8F2EC"/>
+    <path d="M227 229 l3.5 3.5 l6 -6.5" stroke="#1F7A4D" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="218" y="234" text-anchor="end" fill="#1F7A4D" font-size="12" font-weight="600">Verified agent</text>
+  </g>
+
+  <!-- payment chip -->
+  <g transform="translate(1020 552)" filter="url(#shadow)">
+    <rect width="196" height="46" rx="12" fill="#141414"/>
+    <rect x="12" y="12" width="30" height="22" rx="4" fill="#635BFF"/>
+    <text x="27" y="28" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="800">S</text>
+    <text x="52" y="22" fill="#FFFFFF" font-size="12" font-weight="700">Featured · 30 days</text>
+    <text x="52" y="37" fill="#B7B1A6" font-size="11">Paid with Stripe</text>
+  </g>
+</svg>

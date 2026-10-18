@@ -1,5 +1,7 @@
 # PropNest
 
+![PropNest: find a place that feels like yours](docs/banner.png)
+
 [![tests](https://github.com/hashamkhan11/propnest/actions/workflows/tests.yml/badge.svg)](https://github.com/hashamkhan11/propnest/actions/workflows/tests.yml)
 ![PHPStan level 5](https://img.shields.io/badge/PHPStan-level%205-2a5ea7)
 ![PHP 8.3](https://img.shields.io/badge/PHP-8.3-777bb4)
